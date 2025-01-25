@@ -66,7 +66,6 @@ def get_firefox_releases(repo_path):
                 releases[version] = tag_name
 
         return releases
-
     except Exception as e:
         print(f"An error occurred: {e}")
         return []
@@ -78,7 +77,7 @@ def get_stats_path():
 
 def update_repository(tag, repo_path):
     try:
-        print(f"Updating repository to tag: {tag}")
+        print(f"Updating repository to tag/changeset: {tag}")
         result = subprocess.run(
             ["hg", "-R", repo_path, "update", tag],
             stdout=subprocess.PIPE,
