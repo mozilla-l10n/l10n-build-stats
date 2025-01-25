@@ -10,6 +10,7 @@ Extract completion statistics for product over time, store them as CSV
 python extract_product.py --path path_to_mozilla_unified_clone
 """
 
+from functions import get_stats_path
 import argparse
 import csv
 import json
@@ -28,11 +29,8 @@ def main():
     )
     args = cl_parser.parse_args()
 
-    # Get absolute path of ../stats from the current script location
-    stats_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), os.pardir, "stats")
-    )
     product = args.product
+    stats_path = get_stats_path()
 
     version_re = re.compile(r"_([\d_]*)")
 

@@ -1,0 +1,8 @@
+# Path to firefox-l10n clone
+# https://github.com/mozilla-l10n/firefox-l10n
+l10n_path="/path/to/l10n-git-monorepo/"
+
+# Path to mercurial clone of mozilla-unified, only used for the cleanup
+# migrations script. Leave empty if not needed.
+# https://hg.mozilla.org/mozilla-unified/
+mozilla_unified_path="/path/to/mozilla-unified-repo/"
