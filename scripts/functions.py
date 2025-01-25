@@ -99,9 +99,27 @@ def get_stats_path():
     return os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, "stats"))
 
 
-def update_repository(tag, repo_path):
+def update_git_repository(changeset, repo_path):
     try:
-        print(f"Updating repository to tag/changeset: {tag}")
+        print(f"Updating git repository to changeset: {changeset}")
+        result = subprocess.run(
+            ["git", "-C", repo_path, "checkout", changeset],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"Error git updating repository to {changeset}: {result.stderr}"
+            )
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+
+
+def update_hg_repository(tag, repo_path):
+    try:
+        print(f"Updating hg repository to tag: {tag}")
         result = subprocess.run(
             ["hg", "-R", repo_path, "update", tag],
             stdout=subprocess.PIPE,
@@ -109,7 +127,9 @@ def update_repository(tag, repo_path):
             text=True,
         )
         if result.returncode != 0:
-            raise RuntimeError(f"Error updating repository to {tag}: {result.stderr}")
+            raise RuntimeError(
+                f"Error updating hg repository to {tag}: {result.stderr}"
+            )
     except Exception as e:
         print(f"An error occurred: {e}")
         return []

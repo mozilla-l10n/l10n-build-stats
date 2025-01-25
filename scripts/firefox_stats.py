@@ -15,7 +15,8 @@ from functions import (
     get_firefox_releases,
     read_config,
     store_completion,
-    update_repository,
+    update_git_repository,
+    update_hg_repository,
 )
 import argparse
 import json
@@ -138,11 +139,11 @@ def main():
         sys.exit(f"Version {version} not available as a release in repository tags")
 
     # Update the source repository to the tag
-    update_repository(firefox_releases[version], source_path)
+    update_hg_repository(firefox_releases[version], source_path)
 
     # Get the version of the l10n repo
     l10n_changeset = get_l10n_repo_changeset(source_path)
-    update_repository(l10n_changeset, l10n_path)
+    update_git_repository(l10n_changeset, l10n_path)
 
     # Extract list statistics
     string_list, locales = extract_string_list(source_path, l10n_path)

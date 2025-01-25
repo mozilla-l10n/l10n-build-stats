@@ -15,7 +15,7 @@ from functions import (
     get_firefox_releases,
     read_config,
     store_completion,
-    update_repository,
+    update_hg_repository,
 )
 import xml.etree.ElementTree as ET
 import argparse
@@ -23,11 +23,13 @@ import os
 import sys
 
 
-def parse_XML_file(file_path, source=False):
+def parse_XML_file(file_path, source=False, version=None):
     """
     Parse the strings.xml file and return a list of string IDs.
 
-    If it's the source locale, exclude strings with tools:ignore="UnusedResources".
+    If it's the source locale, exclude strings with
+    tools:ignore="UnusedResources", and strings where moz:removedIn is set
+    to a version smaller than the version being checked.
     """
     string_ids = []
 
@@ -35,14 +37,26 @@ def parse_XML_file(file_path, source=False):
         tree = ET.parse(file_path)
         root = tree.getroot()
         for string in root.findall("string"):
+            string_id = string.attrib["name"]
             if source:
                 tools_ignore = string.attrib.get(
                     "{http://schemas.android.com/tools}ignore", ""
                 )
-                if "UnusedResources" not in tools_ignore.split(","):
-                    string_ids.append(string.attrib["name"])
+
+                removed_in = string.attrib.get(
+                    "{http://mozac.org/tools}removedIn", None
+                )
+                removed = False
+                if removed_in and int(removed_in) < int(version.split(".")[0]):
+                    print(
+                        f"Ignoring {string_id} because removed in version {removed_in}"
+                    )
+                    removed = True
+
+                if "UnusedResources" not in tools_ignore.split(",") and not removed:
+                    string_ids.append(string_id)
             else:
-                string_ids.append(string.attrib["name"])
+                string_ids.append(string_id)
     except ET.ParseError as e:
         print(f"Error parsing XML file: {e}")
     except Exception as e:
@@ -51,7 +65,7 @@ def parse_XML_file(file_path, source=False):
     return string_ids
 
 
-def extract_string_list(source_path):
+def extract_string_list(source_path, version):
     toml_paths = {
         "fenix": os.path.join(source_path, "mobile", "android", "fenix", "l10n.toml"),
         "android-components": os.path.join(
@@ -74,7 +88,7 @@ def extract_string_list(source_path):
         for l10n_file, source_file, _, _ in files:
             key = f"{product}:{os.path.relpath(source_file, basedir)}"
             string_list[key] = {
-                "source": parse_XML_file(source_file, source=True),
+                "source": parse_XML_file(source_file, source=True, version=version),
             }
 
         locales = project_config.all_locales
@@ -121,10 +135,10 @@ def main():
         sys.exit(f"Version {version} not available as a release in repository tags")
 
     # Update the repository to the tag
-    update_repository(firefox_releases[version], source_path)
+    update_hg_repository(firefox_releases[version], source_path)
 
     # Extract list statistics
-    string_list, locales = extract_string_list(source_path)
+    string_list, locales = extract_string_list(source_path, version)
 
     # Store completion levels in CSV file
     store_completion(string_list, version, locales, "fenix")
