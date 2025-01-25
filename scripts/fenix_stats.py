@@ -69,10 +69,11 @@ def updateRepository(tag, repo_path):
         return []
 
 
-def parseXMLFile(file_path):
+def parseXMLFile(file_path, source=False):
     """
-    Parse the strings.xml file and return a list of string IDs, excluding
-    those with tools:ignore="UnusedResources".
+    Parse the strings.xml file and return a list of string IDs.
+
+    If it's the source locale, exclude strings with tools:ignore="UnusedResources".
     """
     string_ids = []
 
@@ -80,10 +81,13 @@ def parseXMLFile(file_path):
         tree = ET.parse(file_path)
         root = tree.getroot()
         for string in root.findall("string"):
-            tools_ignore = string.attrib.get(
-                "{http://schemas.android.com/tools}ignore", ""
-            )
-            if "UnusedResources" not in tools_ignore.split(","):
+            if source:
+                tools_ignore = string.attrib.get(
+                    "{http://schemas.android.com/tools}ignore", ""
+                )
+                if "UnusedResources" not in tools_ignore.split(","):
+                    string_ids.append(string.attrib["name"])
+            else:
                 string_ids.append(string.attrib["name"])
     except ET.ParseError as e:
         print(f"Error parsing XML file: {e}")
@@ -116,7 +120,7 @@ def extractStringList(repo_path):
         for l10n_file, source_file, _, _ in files:
             key = f"{product}:{os.path.relpath(source_file, basedir)}"
             string_list[key] = {
-                "source": parseXMLFile(source_file),
+                "source": parseXMLFile(source_file, source=True),
             }
 
         locales = project_config.all_locales
