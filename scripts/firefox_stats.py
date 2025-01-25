@@ -13,8 +13,8 @@ python fenix_stats.py --path path_to_mozilla_unified_clone
 from compare_locales import parser, paths
 from functions import (
     get_firefox_releases,
-    get_stats_path,
     read_config,
+    store_completion,
     update_repository,
 )
 import argparse
@@ -131,7 +131,6 @@ def main():
 
     version = args.version
     [source_path, l10n_path] = read_config(["mozilla_unified_path", "l10n_path"])
-    stats_path = get_stats_path()
 
     # Get the release tags from mozilla-unified
     firefox_releases = get_firefox_releases(source_path)
@@ -148,23 +147,8 @@ def main():
     # Extract list statistics
     string_list, locales = extract_string_list(source_path, l10n_path)
 
-    completion = {}
-    source_stats = sum(len(values.get("source", [])) for values in string_list.values())
-
-    for locale in locales:
-        if locale == "source":
-            continue
-        locale_stats = sum(
-            len(values.get(locale, [])) for values in string_list.values()
-        )
-        completion[locale] = round((locale_stats / source_stats) * 100)
-
-    for locale, perc in completion.items():
-        print(f"{locale}: {perc}%")
-
-    output_file = os.path.join(stats_path, f"firefox_{version.replace('.', '_')}.json")
-    with open(output_file, "w") as f:
-        json.dump(completion, f)
+    # Store completion levels in CSV file
+    store_completion(string_list, version, locales, "firefox")
 
 
 if __name__ == "__main__":

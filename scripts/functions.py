@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import subprocess
@@ -37,6 +38,29 @@ def read_config(params):
         results.append(paths[param])
 
     return results
+
+
+def store_completion(string_list, version, locales, product):
+    completion = {}
+    stats_path = get_stats_path()
+    source_stats = sum(len(values.get("source", [])) for values in string_list.values())
+
+    for locale in locales:
+        if locale == "source":
+            continue
+        locale_stats = sum(
+            len(values.get(locale, [])) for values in string_list.values()
+        )
+        completion[locale] = round((locale_stats / source_stats) * 100)
+
+    for locale, perc in completion.items():
+        print(f"{locale}: {perc}%")
+
+    output_file = os.path.join(
+        stats_path, f"{product}_{version.replace('.', '_')}.json"
+    )
+    with open(output_file, "w") as f:
+        json.dump(completion, f)
 
 
 def get_firefox_releases(repo_path):

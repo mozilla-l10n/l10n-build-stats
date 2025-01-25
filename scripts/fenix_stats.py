@@ -5,7 +5,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 """
-Extract completion statistics for Fenix
+Extract completion statistics for Firefox for Android (fenix)
 
 python fenix_stats.py --path path_to_mozilla_unified_clone
 """
@@ -13,13 +13,12 @@ python fenix_stats.py --path path_to_mozilla_unified_clone
 from compare_locales import paths
 from functions import (
     get_firefox_releases,
-    get_stats_path,
     read_config,
+    store_completion,
     update_repository,
 )
 import xml.etree.ElementTree as ET
 import argparse
-import json
 import os
 import sys
 
@@ -115,7 +114,6 @@ def main():
 
     version = args.version
     [source_path] = read_config(["mozilla_unified_path"])
-    stats_path = get_stats_path()
 
     # Get the release tags from mozilla-unified
     firefox_releases = get_firefox_releases(source_path)
@@ -128,23 +126,8 @@ def main():
     # Extract list statistics
     string_list, locales = extract_string_list(source_path)
 
-    completion = {}
-    source_stats = sum(len(values.get("source", [])) for values in string_list.values())
-
-    for locale in locales:
-        if locale == "source":
-            continue
-        locale_stats = sum(
-            len(values.get(locale, [])) for values in string_list.values()
-        )
-        completion[locale] = round((locale_stats / source_stats) * 100)
-
-    for locale, perc in completion.items():
-        print(f"{locale}: {perc}%")
-
-    output_file = os.path.join(stats_path, f"fenix_{version.replace('.', '_')}.json")
-    with open(output_file, "w") as f:
-        json.dump(completion, f)
+    # Store completion levels in CSV file
+    store_completion(string_list, version, locales, "fenix")
 
 
 if __name__ == "__main__":
