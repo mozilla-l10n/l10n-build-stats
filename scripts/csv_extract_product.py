@@ -61,11 +61,11 @@ def main():
     csv_file = os.path.join(stats_path, f"{product}_locales.csv")
     with open(csv_file, "w") as csv_file:
         fieldnames = ["Version"] + locales
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames, lineterminator="\n")
 
         writer.writeheader()
         for version, percentages in locale_data.items():
-            row = {"version": version}
+            row = {"Version": version}
             row.update(percentages)
             writer.writerow(row)
 
