@@ -63,7 +63,9 @@ def main():
 
         writer.writeheader()
         for version, percentages in locale_data.items():
-            row = {"Version": version}
+            row = {
+                "Version": f"'{version}"
+            }  # Force as string when imported in Google Sheets
             row.update(percentages)
             writer.writerow(row)
 
