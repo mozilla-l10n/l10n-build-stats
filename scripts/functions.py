@@ -51,10 +51,10 @@ def store_completion(string_list, version, locales, product):
         locale_stats = sum(
             len(values.get(locale, [])) for values in string_list.values()
         )
-        completion[locale] = round((locale_stats / source_stats) * 100)
+        completion[locale] = round((locale_stats / source_stats), 4)
 
-    for locale, perc in completion.items():
-        print(f"{locale}: {perc}%")
+    for locale, percentage in completion.items():
+        print(f"{locale}: {round(percentage * 100, 2)}%")
 
     output_file = os.path.join(
         stats_path, f"{product}_{version.replace('.', '_')}.json"
