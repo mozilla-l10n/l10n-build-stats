@@ -1121,6 +1121,778 @@
       "message": "Pontoon: Update Chinese (Taiwan) (zh-TW) localization of Firefox"
     }
   },
+  "71.0": {
+    "ach": {
+      "date": "2019-11-16 07:55 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "af": {
+      "date": "2019-11-16 07:55 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "an": {
+      "date": "2019-11-16 07:56 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "ar": {
+      "date": "2019-11-16 07:56 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "ast": {
+      "date": "2019-11-18 09:35 +0000",
+      "message": "Pontoon: Update Asturian (ast) localization of Firefox for Android"
+    },
+    "az": {
+      "date": "2019-11-16 07:56 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 2."
+    },
+    "be": {
+      "date": "2019-11-17 16:33 +0000",
+      "message": "Pontoon: Update Belarusian (be) localization of Firefox"
+    },
+    "bg": {
+      "date": "2019-11-16 07:57 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "bn": {
+      "date": "2019-11-16 07:58 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "br": {
+      "date": "2019-11-16 07:58 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "bs": {
+      "date": "2019-11-16 07:58 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "ca": {
+      "date": "2019-11-17 23:14 +0000",
+      "message": "Pontoon: Update Catalan (ca) localization of Firefox"
+    },
+    "ca-valencia": {
+      "date": "2019-11-16 07:59 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "cak": {
+      "date": "2019-11-16 17:53 +0000",
+      "message": "Pontoon: Update Kaqchikel (cak) localization of Firefox"
+    },
+    "cs": {
+      "date": "2019-11-17 10:14 +0000",
+      "message": "Pontoon: Update Czech (cs) localization of Firefox"
+    },
+    "cy": {
+      "date": "2019-11-18 15:33 +0000",
+      "message": "Pontoon: Update Welsh (cy) localization of Thunderbird"
+    },
+    "da": {
+      "date": "2019-11-16 08:00 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "de": {
+      "date": "2019-11-23 14:55 +0100",
+      "message": "Bug 1591328 - Migrate browser window title to Fluent, part 1"
+    },
+    "dsb": {
+      "date": "2019-11-19 15:13 +0000",
+      "message": "Pontoon: Update Sorbian, Lower (dsb) localization of Firefox"
+    },
+    "el": {
+      "date": "2019-11-16 08:01 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "en-CA": {
+      "date": "2019-11-16 07:52 +0000",
+      "message": "Pontoon: Update English (Canada) (en-CA) localization of Firefox"
+    },
+    "en-GB": {
+      "date": "2019-11-16 08:01 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "eo": {
+      "date": "2019-11-19 21:14 +0000",
+      "message": "Pontoon: Update Esperanto (eo) localization of Firefox for Android"
+    },
+    "es-AR": {
+      "date": "2019-11-19 21:33 +0000",
+      "message": "Pontoon: Update Spanish (Argentina) (es-AR) localization of Firefox"
+    },
+    "es-CL": {
+      "date": "2019-11-20 02:33 +0000",
+      "message": "Pontoon: Update Spanish (Chile) (es-CL) localization of Firefox"
+    },
+    "es-ES": {
+      "date": "2019-11-17 19:53 +0000",
+      "message": "Pontoon: Update Spanish (Spain) (es-ES) localization of Firefox"
+    },
+    "es-MX": {
+      "date": "2019-11-16 08:02 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "et": {
+      "date": "2019-11-16 08:03 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "eu": {
+      "date": "2019-11-20 13:13 +0000",
+      "message": "Pontoon: Update Basque (eu) localization of Thunderbird"
+    },
+    "fa": {
+      "date": "2019-11-18 17:54 +0000",
+      "message": "Pontoon: Update Persian (fa) localization of Firefox"
+    },
+    "ff": {
+      "date": "2019-11-16 08:03 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "fi": {
+      "date": "2019-11-17 14:53 +0000",
+      "message": "Pontoon: Update Finnish (fi) localization of Firefox"
+    },
+    "fr": {
+      "date": "2019-11-18 19:13 +0000",
+      "message": "Pontoon: Update French (fr) localization of Firefox"
+    },
+    "fy-NL": {
+      "date": "2019-11-17 11:53 +0000",
+      "message": "Pontoon: Update Frisian (fy-NL) localization of Thunderbird"
+    },
+    "ga-IE": {
+      "date": "2019-11-16 08:04 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "gd": {
+      "date": "2019-11-16 08:05 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "gl": {
+      "date": "2019-11-16 08:05 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "gn": {
+      "date": "2019-11-19 14:12 +0000",
+      "message": "Pontoon: Update Guarani (gn) localization of Firefox"
+    },
+    "gu-IN": {
+      "date": "2019-11-16 08:05 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "he": {
+      "date": "2019-11-18 20:35 +0000",
+      "message": "Pontoon: Update Hebrew (he) localization of Firefox"
+    },
+    "hi-IN": {
+      "date": "2019-11-19 15:13 +0000",
+      "message": "Pontoon: Update Hindi (hi-IN) localization of Firefox"
+    },
+    "hr": {
+      "date": "2019-11-16 08:06 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "hsb": {
+      "date": "2019-11-19 15:14 +0000",
+      "message": "Pontoon: Update Sorbian, Upper (hsb) localization of Firefox"
+    },
+    "hu": {
+      "date": "2019-11-20 13:17 +0000",
+      "message": "Pontoon: Update Hungarian (hu) localization of Firefox"
+    },
+    "hy-AM": {
+      "date": "2019-11-16 08:07 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "ia": {
+      "date": "2019-11-18 15:53 +0000",
+      "message": "Pontoon: Update Interlingua (ia) localization of Firefox"
+    },
+    "id": {
+      "date": "2019-11-16 08:07 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 2."
+    },
+    "is": {
+      "date": "2019-11-16 08:07 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "it": {
+      "date": "2019-11-25 06:51 +0100",
+      "message": "[Q] toolkit: fix \"location\" in cert viewer"
+    },
+    "ja": {
+      "date": "2019-11-18 23:59 +0900",
+      "message": "71.0+: sync devtools with en-US rev12444:651161133e57 (2019-11-16)"
+    },
+    "ja-JP-mac": {
+      "date": "2019-11-18 23:59 +0900",
+      "message": "71.0+: sync devtools with en-US rev12444:651161133e57 (2019-11-16)"
+    },
+    "ka": {
+      "date": "2019-11-17 02:33 +0000",
+      "message": "Pontoon: Update Georgian (ka) localization of Thunderbird"
+    },
+    "kab": {
+      "date": "2019-11-17 15:34 +0000",
+      "message": "Pontoon: Update Kabyle (kab) localization of Firefox"
+    },
+    "kk": {
+      "date": "2019-11-17 13:33 +0000",
+      "message": "Pontoon: Update Kazakh (kk) localization of Firefox"
+    },
+    "km": {
+      "date": "2019-11-16 08:09 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "kn": {
+      "date": "2019-11-16 08:09 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "ko": {
+      "date": "2019-11-16 08:10 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "lij": {
+      "date": "2019-11-16 08:11 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "lt": {
+      "date": "2019-11-17 19:52 +0000",
+      "message": "Pontoon: Update Lithuanian (lt) localization of Firefox"
+    },
+    "lv": {
+      "date": "2019-11-16 08:11 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "mk": {
+      "date": "2019-11-16 08:12 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "mr": {
+      "date": "2019-11-16 08:13 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "ms": {
+      "date": "2019-11-16 08:13 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "my": {
+      "date": "2019-11-16 08:13 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "nb-NO": {
+      "date": "2019-11-17 14:13 +0000",
+      "message": "Pontoon: Update Norwegian Bokm\u00e5l (nb-NO) localization of Firefox"
+    },
+    "ne-NP": {
+      "date": "2019-11-16 08:14 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "nl": {
+      "date": "2019-11-17 11:53 +0000",
+      "message": "Pontoon: Update Dutch (nl) localization of Thunderbird"
+    },
+    "nn-NO": {
+      "date": "2019-11-17 13:14 +0000",
+      "message": "Pontoon: Update Norwegian Nynorsk (nn-NO) localization of Firefox"
+    },
+    "oc": {
+      "date": "2019-11-17 12:52 +0000",
+      "message": "Pontoon: Update Occitan (oc) localization of Firefox"
+    },
+    "pa-IN": {
+      "date": "2019-11-16 08:15 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "pl": {
+      "date": "2019-11-17 15:13 +0000",
+      "message": "Pontoon: Update Polish (pl) localization of Firefox"
+    },
+    "pt-BR": {
+      "date": "2019-11-19 15:54 +0000",
+      "message": "Pontoon: Update Portuguese (Brazil) (pt-BR) localization of Firefox"
+    },
+    "pt-PT": {
+      "date": "2019-11-19 03:14 +0000",
+      "message": "Pontoon: Update Portuguese (Portugal) (pt-PT) localization of Firefox"
+    },
+    "rm": {
+      "date": "2019-11-19 04:53 +0000",
+      "message": "Pontoon: Update Romansh (rm) localization of Firefox"
+    },
+    "ro": {
+      "date": "2019-11-16 08:17 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "ru": {
+      "date": "2019-11-17 03:12 +0000",
+      "message": "Pontoon: Update Russian (ru) localization of Firefox"
+    },
+    "si": {
+      "date": "2019-11-16 08:18 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "sk": {
+      "date": "2019-11-18 17:14 +0000",
+      "message": "Pontoon: Update Slovak (sk) localization of Thunderbird"
+    },
+    "sl": {
+      "date": "2019-11-19 10:54 +0000",
+      "message": "Pontoon: Update Slovenian (sl) localization of Firefox"
+    },
+    "son": {
+      "date": "2019-11-16 08:19 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "sq": {
+      "date": "2019-11-16 08:19 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "sr": {
+      "date": "2019-11-16 08:19 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 2."
+    },
+    "sv-SE": {
+      "date": "2019-11-16 14:35 +0000",
+      "message": "Pontoon: Update Swedish (sv-SE) localization of Firefox"
+    },
+    "ta": {
+      "date": "2019-11-16 08:20 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "te": {
+      "date": "2019-11-16 08:21 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "th": {
+      "date": "2019-11-16 08:21 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "tl": {
+      "date": "2019-11-18 18:39 +0000",
+      "message": "Pontoon: Update Tagalog (tl) localization of Firefox"
+    },
+    "tr": {
+      "date": "2019-11-20 13:18 +0000",
+      "message": "Pontoon: Update Turkish (tr) localization of Firefox"
+    },
+    "trs": {
+      "date": "2019-11-20 02:13 +0000",
+      "message": "Pontoon: Update Triqui (trs) localization of Firefox"
+    },
+    "uk": {
+      "date": "2019-11-18 15:15 +0000",
+      "message": "Pontoon: Update Ukrainian (uk) localization of Firefox"
+    },
+    "ur": {
+      "date": "2019-11-16 08:23 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "uz": {
+      "date": "2019-11-16 08:23 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "vi": {
+      "date": "2019-11-20 05:57 +0000",
+      "message": "Pontoon: Update Vietnamese (vi) localization of Firefox"
+    },
+    "xh": {
+      "date": "2019-11-16 08:23 +0100",
+      "message": "Bug 1588142 - about:preferences - migrate the root xul:window element to an html:html element, part 1."
+    },
+    "zh-CN": {
+      "date": "2019-11-16 09:52 +0000",
+      "message": "Pontoon: Update Chinese (China) (zh-CN) localization of Thunderbird"
+    },
+    "zh-TW": {
+      "date": "2019-11-16 13:52 +0000",
+      "message": "Pontoon: Update Chinese (Taiwan) (zh-TW) localization of Firefox"
+    }
+  },
+  "72.0": {
+    "ach": {
+      "date": "2019-12-18 18:33 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "af": {
+      "date": "2019-12-18 18:07 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "an": {
+      "date": "2019-12-19 15:54 +0000",
+      "message": "Pontoon: Update Aragonese (an) localization of Firefox"
+    },
+    "ar": {
+      "date": "2019-12-21 15:54 +0000",
+      "message": "Pontoon: Update Arabic (ar) localization of Firefox"
+    },
+    "ast": {
+      "date": "2019-12-18 18:34 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "az": {
+      "date": "2019-12-18 18:34 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "be": {
+      "date": "2019-12-24 19:14 +0000",
+      "message": "Pontoon: Update Belarusian (be) localization of Firefox"
+    },
+    "bg": {
+      "date": "2019-12-18 18:34 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "bn": {
+      "date": "2019-12-18 18:09 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "br": {
+      "date": "2019-12-20 18:13 +0000",
+      "message": "Pontoon: Update Breton (br) localization of Thunderbird"
+    },
+    "bs": {
+      "date": "2019-12-18 18:34 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "ca": {
+      "date": "2019-12-18 18:34 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "ca-valencia": {
+      "date": "2019-12-20 07:42 +0100",
+      "message": "Fix line ending for uiDensity.properties"
+    },
+    "cak": {
+      "date": "2019-12-24 01:32 +0000",
+      "message": "Pontoon: Update Kaqchikel (cak) localization of Firefox"
+    },
+    "cs": {
+      "date": "2019-12-19 07:14 +0000",
+      "message": "Pontoon: Update Czech (cs) localization of Firefox"
+    },
+    "cy": {
+      "date": "2019-12-24 12:33 +0000",
+      "message": "Pontoon: Update Welsh (cy) localization of Firefox"
+    },
+    "da": {
+      "date": "2019-12-24 10:42 +0100",
+      "message": "Corrections for 878c5f5"
+    },
+    "de": {
+      "date": "2019-12-24 17:14 +0000",
+      "message": "Pontoon: Update German (de) localization of Firefox"
+    },
+    "dsb": {
+      "date": "2019-12-19 13:35 +0000",
+      "message": "Pontoon: Update Sorbian, Lower (dsb) localization of Firefox"
+    },
+    "el": {
+      "date": "2019-12-24 13:14 +0000",
+      "message": "Pontoon: Update Greek (el) localization of Thunderbird"
+    },
+    "en-CA": {
+      "date": "2019-12-24 03:54 +0000",
+      "message": "Pontoon: Update English (Canada) (en-CA) localization of Thunderbird"
+    },
+    "en-GB": {
+      "date": "2019-12-19 00:54 +0000",
+      "message": "Pontoon: Update English (Great Britain) (en-GB) localization of Firefox"
+    },
+    "eo": {
+      "date": "2019-12-18 18:13 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "es-AR": {
+      "date": "2019-12-20 00:34 +0000",
+      "message": "Pontoon: Update Spanish (Argentina) (es-AR) localization of Firefox"
+    },
+    "es-CL": {
+      "date": "2019-12-18 18:13 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "es-ES": {
+      "date": "2019-12-22 17:15 +0000",
+      "message": "Pontoon: Update Spanish (Spain) (es-ES) localization of Firefox"
+    },
+    "es-MX": {
+      "date": "2019-12-18 18:13 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "et": {
+      "date": "2019-12-18 18:35 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "eu": {
+      "date": "2019-12-19 22:14 +0000",
+      "message": "Pontoon: Update Basque (eu) localization of Firefox"
+    },
+    "fa": {
+      "date": "2019-12-18 18:35 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "ff": {
+      "date": "2019-12-18 18:35 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "fi": {
+      "date": "2019-12-22 14:35 +0000",
+      "message": "Pontoon: Update Finnish (fi) localization of Firefox"
+    },
+    "fr": {
+      "date": "2019-12-24 10:13 +0000",
+      "message": "Pontoon: Update French (fr) localization of Firefox"
+    },
+    "fy-NL": {
+      "date": "2019-12-23 09:54 +0000",
+      "message": "Pontoon: Update Frisian (fy-NL) localization of Firefox"
+    },
+    "ga-IE": {
+      "date": "2019-12-18 18:35 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "gd": {
+      "date": "2019-12-18 18:35 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "gl": {
+      "date": "2019-12-18 18:35 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "gn": {
+      "date": "2019-12-23 11:14 +0000",
+      "message": "Pontoon: Update Guarani (gn) localization of Firefox"
+    },
+    "gu-IN": {
+      "date": "2019-12-18 18:36 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "he": {
+      "date": "2019-12-25 06:53 +0000",
+      "message": "Pontoon: Update Hebrew (he) localization of Firefox"
+    },
+    "hi-IN": {
+      "date": "2019-12-18 18:16 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "hr": {
+      "date": "2019-12-18 20:09 +0000",
+      "message": "Pontoon: Update Croatian (hr) localization of Firefox"
+    },
+    "hsb": {
+      "date": "2019-12-19 13:35 +0000",
+      "message": "Pontoon: Update Sorbian, Upper (hsb) localization of Firefox"
+    },
+    "hu": {
+      "date": "2019-12-21 22:35 +0000",
+      "message": "Pontoon: Update Hungarian (hu) localization of Firefox"
+    },
+    "hy-AM": {
+      "date": "2019-12-27 07:49 +0000",
+      "message": "Pontoon: Update Armenian (hy-AM) localization of Firefox"
+    },
+    "ia": {
+      "date": "2019-12-24 15:35 +0000",
+      "message": "Pontoon: Update Interlingua (ia) localization of Firefox"
+    },
+    "id": {
+      "date": "2019-12-24 14:34 +0000",
+      "message": "Pontoon: Update Indonesian (id) localization of Firefox"
+    },
+    "is": {
+      "date": "2019-12-18 18:36 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "it": {
+      "date": "2019-12-24 17:40 +0100",
+      "message": "[Q] browser: change \"Zoom text only\" label"
+    },
+    "ja": {
+      "date": "2019-12-23 23:37 +0900",
+      "message": "72.0+: sync mail, suite with en-US rev12513:d21bd5a2df62 (2019-12-18)"
+    },
+    "ja-JP-mac": {
+      "date": "2019-12-23 23:37 +0900",
+      "message": "72.0+: sync mail, suite with en-US rev12513:d21bd5a2df62 (2019-12-18)"
+    },
+    "ka": {
+      "date": "2019-12-19 05:35 +0000",
+      "message": "Pontoon: Update Georgian (ka) localization of Thunderbird"
+    },
+    "kab": {
+      "date": "2019-12-24 21:34 +0000",
+      "message": "Pontoon: Update Kabyle (kab) localization of Firefox"
+    },
+    "kk": {
+      "date": "2019-12-20 15:58 +0000",
+      "message": "Pontoon: Update Kazakh (kk) localization of Firefox for Android"
+    },
+    "km": {
+      "date": "2019-12-18 18:19 +0100",
+      "message": "Bug 1443175 - Remove empty files (without strings or completely empty)"
+    },
+    "kn": {
+      "date": "2019-12-18 18:36 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "ko": {
+      "date": "2019-12-23 08:19 +0000",
+      "message": "Pontoon: Update Korean (ko) localization of Firefox"
+    },
+    "lij": {
+      "date": "2019-12-18 18:36 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "lt": {
+      "date": "2019-12-24 11:54 +0000",
+      "message": "Pontoon: Update Lithuanian (lt) localization of Firefox"
+    },
+    "lv": {
+      "date": "2019-12-18 18:37 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "mk": {
+      "date": "2019-12-18 18:21 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "mr": {
+      "date": "2019-12-18 18:22 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "ms": {
+      "date": "2019-12-18 18:37 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "my": {
+      "date": "2019-12-18 17:54 +0100",
+      "message": "Remove unnecessary leading/trailing whitespaces"
+    },
+    "nb-NO": {
+      "date": "2019-12-22 21:41 +0000",
+      "message": "Pontoon: Update Norwegian Bokm\u00e5l (nb-NO) localization of Firefox"
+    },
+    "ne-NP": {
+      "date": "2019-12-18 18:37 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "nl": {
+      "date": "2019-12-20 15:34 +0000",
+      "message": "Pontoon: Update Dutch (nl) localization of Firefox"
+    },
+    "nn-NO": {
+      "date": "2019-12-22 16:34 +0000",
+      "message": "Pontoon: Update Norwegian Nynorsk (nn-NO) localization of Firefox"
+    },
+    "oc": {
+      "date": "2019-12-18 18:37 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "pa-IN": {
+      "date": "2019-12-24 11:54 +0000",
+      "message": "Pontoon: Update Punjabi (pa-IN) localization of Firefox"
+    },
+    "pl": {
+      "date": "2019-12-23 16:54 +0000",
+      "message": "Pontoon: Update Polish (pl) localization of Firefox"
+    },
+    "pt-BR": {
+      "date": "2019-12-20 08:35 +0000",
+      "message": "Pontoon: Update Portuguese (Brazil) (pt-BR) localization of Firefox"
+    },
+    "pt-PT": {
+      "date": "2019-12-18 18:24 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "rm": {
+      "date": "2019-12-18 18:24 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "ro": {
+      "date": "2019-12-18 18:37 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "ru": {
+      "date": "2019-12-21 14:35 +0000",
+      "message": "Pontoon: Update Russian (ru) localization of Thunderbird"
+    },
+    "si": {
+      "date": "2019-12-18 18:25 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "sk": {
+      "date": "2019-12-22 22:54 +0000",
+      "message": "Pontoon: Update Slovak (sk) localization of Firefox"
+    },
+    "sl": {
+      "date": "2019-12-24 10:53 +0000",
+      "message": "Pontoon: Update Slovenian (sl) localization of Firefox"
+    },
+    "son": {
+      "date": "2019-12-18 17:52 +0100",
+      "message": "Bug 1600528 - Migrate Migrate browserContext.inc to Fluent, part 4."
+    },
+    "sq": {
+      "date": "2019-12-19 16:34 +0000",
+      "message": "Pontoon: Update Albanian (sq) localization of Firefox"
+    },
+    "sr": {
+      "date": "2019-12-18 18:38 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "sv-SE": {
+      "date": "2019-12-21 12:54 +0000",
+      "message": "Pontoon: Update Swedish (sv-SE) localization of Firefox"
+    },
+    "ta": {
+      "date": "2019-12-22 13:13 +0000",
+      "message": "Pontoon: Update Tamil (ta) localization of Firefox"
+    },
+    "te": {
+      "date": "2019-12-18 18:38 +0100",
+      "message": "Bug 1586984 - Add empty FTL files to repository to avoid English fallback"
+    },
+    "th": {
+      "date": "2019-12-21 23:54 +0000",
+      "message": "Pontoon: Update Thai (th) localization of Firefox"
+    },
+    "tl": {
+      "date": "2019-12-18 18:27 +0100",
+      "message": "Bug 1443175 - Remove obsolete files"
+    },
+    "tr": {
+      "date": "2019-12-20 10:53 +0000",
+      "message": "Pontoon: Update Turkish (tr) localization of Firefox"
+    },
+    "trs": {
+      "date": "2019-12-23 17:14 +0000",
+      "message": "Pontoon: Update Triqui (trs) localization of Firefox"
+    },
+    "uk": {
+      "date": "2019-12-20 11:34 +0000",
+      "message": "Pontoon: Update Ukrainian (uk) localization of Firefox"
+    },
+    "ur": {
+      "date": "2019-12-23 13:13 +0000",
+      "message": "Pontoon: Update Urdu (ur) localization of Firefox"
+    },
+    "uz": {
+      "date": "2019-12-18 17:59 +0100",
+      "message": "Bug 1600528 - Migrate Migrate browserContext.inc to Fluent, part 5."
+    },
+    "vi": {
+      "date": "2019-12-18 18:00 +0100",
+      "message": "Bug 1600528 - Migrate Migrate browserContext.inc to Fluent, part 9."
+    },
+    "xh": {
+      "date": "2019-12-18 18:01 +0100",
+      "message": "Bug 1600528 - Migrate Migrate browserContext.inc to Fluent, part 5."
+    },
+    "zh-CN": {
+      "date": "2019-12-19 01:34 +0000",
+      "message": "Pontoon: Update Chinese (China) (zh-CN) localization of Firefox"
+    },
+    "zh-TW": {
+      "date": "2019-12-21 03:14 +0000",
+      "message": "Pontoon: Update Chinese (Taiwan) (zh-TW) localization of Firefox"
+    }
+  },
   "73.0": {
     "ach": {
       "date": "2020-01-26 14:47 +0100",

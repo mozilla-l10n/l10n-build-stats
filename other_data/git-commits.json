@@ -1121,6 +1121,778 @@
       "changeset": "da8d4faf541da6035566b8dca968fa277843d170"
     }
   },
+  "71.0": {
+    "ach": {
+      "date": "2019-11-16 07:55 +0100",
+      "changeset": "305b0e9d72835f6b93378c1940a53bf3857d251e"
+    },
+    "af": {
+      "date": "2019-11-16 07:55 +0100",
+      "changeset": "7c2ee8f2c2964bcc09ae2a20bb0da3ea2b6005d4"
+    },
+    "an": {
+      "date": "2019-11-16 07:56 +0100",
+      "changeset": "24141e5d35153164a1d141559d97dddeef162843"
+    },
+    "ar": {
+      "date": "2019-11-16 07:56 +0100",
+      "changeset": "4c3b2c1889b2dda6f600780fd2ac1a343443132e"
+    },
+    "ast": {
+      "date": "2019-11-18 09:35 +0000",
+      "changeset": "3efd3147e815453a4a65da5bb90c01c84bfa5235"
+    },
+    "az": {
+      "date": "2019-11-16 07:56 +0100",
+      "changeset": "f2d9e4820143be8f530c90e369d60f8cdd6aec2f"
+    },
+    "be": {
+      "date": "2019-11-17 16:33 +0000",
+      "changeset": "c0badf2344f52618cc64b438452e35dd24aeacc2"
+    },
+    "bg": {
+      "date": "2019-11-16 07:57 +0100",
+      "changeset": "188de155188bcbe71226f7959b6eb001d0612751"
+    },
+    "bn": {
+      "date": "2019-11-16 07:58 +0100",
+      "changeset": "396b3a426554d3acdf100d7b8582f34e669cd33e"
+    },
+    "br": {
+      "date": "2019-11-16 07:58 +0100",
+      "changeset": "e69e4876f4c2bb114ab93d633362732ba79e96b1"
+    },
+    "bs": {
+      "date": "2019-11-16 07:58 +0100",
+      "changeset": "ea0d35453cf82e94378b4bac0535dfe610f52fa6"
+    },
+    "ca": {
+      "date": "2019-11-17 23:14 +0000",
+      "changeset": "8d36a51a3c66c7cbdf5b4b7e4fb232e3055494d3"
+    },
+    "ca-valencia": {
+      "date": "2019-11-16 07:59 +0100",
+      "changeset": "01a85ca5d48a8e3051162b47b47be1d4f1789d92"
+    },
+    "cak": {
+      "date": "2019-11-16 17:53 +0000",
+      "changeset": "79b5d40cea8ecd0e50bff0b3b413ae2e22d5b503"
+    },
+    "cs": {
+      "date": "2019-11-17 10:14 +0000",
+      "changeset": "6c4fab1bfe54cd373a1d0cfed61ea560aef4bd8d"
+    },
+    "cy": {
+      "date": "2019-11-18 15:33 +0000",
+      "changeset": "2772e78ccaca6332d1f80caf0c015081518e5cf6"
+    },
+    "da": {
+      "date": "2019-11-16 08:00 +0100",
+      "changeset": "e85944048a5b15879de6ded73e477381c58fbf58"
+    },
+    "de": {
+      "date": "2019-11-23 14:55 +0100",
+      "changeset": "42c9f49b2378acfb37985e297f15e37a000e836f"
+    },
+    "dsb": {
+      "date": "2019-11-19 15:13 +0000",
+      "changeset": "a2abaef98eea5366be0bd5d73726ed7b980b0ee3"
+    },
+    "el": {
+      "date": "2019-11-16 08:01 +0100",
+      "changeset": "859456c8e329d8591484711c2b1cd93ba832a629"
+    },
+    "en-CA": {
+      "date": "2019-11-16 07:52 +0000",
+      "changeset": "77ad97747e19f519ac3e774bd2614380d1404828"
+    },
+    "en-GB": {
+      "date": "2019-11-16 08:01 +0100",
+      "changeset": "3b9d5f4bd3a6df5445c9e43567fa5af3807286e4"
+    },
+    "eo": {
+      "date": "2019-11-19 21:14 +0000",
+      "changeset": "d755a070987c90c28c1aceff1ebe0c2e12d02778"
+    },
+    "es-AR": {
+      "date": "2019-11-19 21:33 +0000",
+      "changeset": "3b860eb741e7ffcec6b28b79dc4a8336b5ca9792"
+    },
+    "es-CL": {
+      "date": "2019-11-20 02:33 +0000",
+      "changeset": "438702164778d1f092ccdc937cf95e9797885658"
+    },
+    "es-ES": {
+      "date": "2019-11-17 19:53 +0000",
+      "changeset": "e63e3c1c7a0777b5d09c676abda71eccae830a7b"
+    },
+    "es-MX": {
+      "date": "2019-11-16 08:02 +0100",
+      "changeset": "34a4329df23e56e49e9a468ab0d7398c7defab12"
+    },
+    "et": {
+      "date": "2019-11-16 08:03 +0100",
+      "changeset": "99ee43805960427a286efc1cbdb1d9c7a54c5324"
+    },
+    "eu": {
+      "date": "2019-11-20 13:13 +0000",
+      "changeset": "8cff770c99d5f961af24bf006a4b3e27e506f4bf"
+    },
+    "fa": {
+      "date": "2019-11-18 17:54 +0000",
+      "changeset": "602e146fc6764637dfb4c279f1f2e8cc480d8c52"
+    },
+    "ff": {
+      "date": "2019-11-16 08:03 +0100",
+      "changeset": "4f84e3f6e9e7e400797a70615d06a5d1d641e389"
+    },
+    "fi": {
+      "date": "2019-11-17 14:53 +0000",
+      "changeset": "4b4a618bf753e598b9e7f2d481f9a7c721ddbef6"
+    },
+    "fr": {
+      "date": "2019-11-18 19:13 +0000",
+      "changeset": "ba52676741eb6d829712c95e9eec3aef57573e7b"
+    },
+    "fy-NL": {
+      "date": "2019-11-17 11:53 +0000",
+      "changeset": "eed5052ff874a09a81d50f473d4553b3658fa187"
+    },
+    "ga-IE": {
+      "date": "2019-11-16 08:04 +0100",
+      "changeset": "038bb71934c9f55081acd690840d9e6699533ee6"
+    },
+    "gd": {
+      "date": "2019-11-16 08:05 +0100",
+      "changeset": "27fad1f63228570c734223922b3141182182df4b"
+    },
+    "gl": {
+      "date": "2019-11-16 08:05 +0100",
+      "changeset": "2e21a003679760ef8abbe6995e8a2858e4aeaf68"
+    },
+    "gn": {
+      "date": "2019-11-19 14:12 +0000",
+      "changeset": "237b5d32e3425932f56d1eea4ef8ad78d244d291"
+    },
+    "gu-IN": {
+      "date": "2019-11-16 08:05 +0100",
+      "changeset": "4b08755ac98873287d2268c2053bcf16f071c54c"
+    },
+    "he": {
+      "date": "2019-11-18 20:35 +0000",
+      "changeset": "483e67d46fcd150d064a497970e6e14aa3d13570"
+    },
+    "hi-IN": {
+      "date": "2019-11-19 15:13 +0000",
+      "changeset": "78ed104a12efcc1200b801ced78abd0bf8aebf6f"
+    },
+    "hr": {
+      "date": "2019-11-16 08:06 +0100",
+      "changeset": "2aeaa6fefc8f2bd98960b5999ae7deec845d08f0"
+    },
+    "hsb": {
+      "date": "2019-11-19 15:14 +0000",
+      "changeset": "a3434974b7169a1815e96a3a59d144426e7be3c9"
+    },
+    "hu": {
+      "date": "2019-11-20 13:17 +0000",
+      "changeset": "d347d7947deaa3a762744e6725322f6f9cd37c54"
+    },
+    "hy-AM": {
+      "date": "2019-11-16 08:07 +0100",
+      "changeset": "0aab4a81aad10b52e44f7376c8ddb31ce3e47c83"
+    },
+    "ia": {
+      "date": "2019-11-18 15:53 +0000",
+      "changeset": "c0dac15395e8dcdc54fb2688b2b288f43e2eda92"
+    },
+    "id": {
+      "date": "2019-11-16 08:07 +0100",
+      "changeset": "174e2cf19a3ef8b04963b5ee89ca91a4e7ab6371"
+    },
+    "is": {
+      "date": "2019-11-16 08:07 +0100",
+      "changeset": "92a1614f75278c9ae70b834d73c1da1eaadfcc8f"
+    },
+    "it": {
+      "date": "2019-11-25 06:51 +0100",
+      "changeset": "5d7258bc8af61630126cc21ac203cbb55d1d68b6"
+    },
+    "ja": {
+      "date": "2019-11-18 23:59 +0900",
+      "changeset": "9f898ed75a26a23a2b7f3797c4e9d7399a737363"
+    },
+    "ja-JP-mac": {
+      "date": "2019-11-18 23:59 +0900",
+      "changeset": "1a7b06b45577ebab43b60f784e2a5a0322116c4c"
+    },
+    "ka": {
+      "date": "2019-11-17 02:33 +0000",
+      "changeset": "9d00334e2132f9cdd84f4ba4be8346918a46e131"
+    },
+    "kab": {
+      "date": "2019-11-17 15:34 +0000",
+      "changeset": "11407243a9017cd8947d765d934fdb3564647ada"
+    },
+    "kk": {
+      "date": "2019-11-17 13:33 +0000",
+      "changeset": "f9b62d144e4325df790a2cddccfb08634f172abd"
+    },
+    "km": {
+      "date": "2019-11-16 08:09 +0100",
+      "changeset": "40bd2efef6e8a63a25f57f1035184060cae1ce26"
+    },
+    "kn": {
+      "date": "2019-11-16 08:09 +0100",
+      "changeset": "47a314faca898e151496089c7c058a368834643e"
+    },
+    "ko": {
+      "date": "2019-11-16 08:10 +0100",
+      "changeset": "8c665f22d7205a9d328bef3a2ebd04832ef617e6"
+    },
+    "lij": {
+      "date": "2019-11-16 08:11 +0100",
+      "changeset": "8fb3cf4e24da9964c0e69f2b6e71c70683ade05a"
+    },
+    "lt": {
+      "date": "2019-11-17 19:52 +0000",
+      "changeset": "39083e20da8d5febde61a5964dd00f9c7c8f3de3"
+    },
+    "lv": {
+      "date": "2019-11-16 08:11 +0100",
+      "changeset": "3a7c8a0b421441aa4ca7973d6800d42db6fefde2"
+    },
+    "mk": {
+      "date": "2019-11-16 08:12 +0100",
+      "changeset": "d786e69efd3079d20b6fdf591aa3c5495170bf84"
+    },
+    "mr": {
+      "date": "2019-11-16 08:13 +0100",
+      "changeset": "f61389035c442edbd180438526ee511930f7a5a1"
+    },
+    "ms": {
+      "date": "2019-11-16 08:13 +0100",
+      "changeset": "9e67f626f7000f31c93cd92b2bb0ffe262532c5f"
+    },
+    "my": {
+      "date": "2019-11-16 08:13 +0100",
+      "changeset": "dea1bd1246c7df70d42714f80b85a2e3fd9ff6c2"
+    },
+    "nb-NO": {
+      "date": "2019-11-17 14:13 +0000",
+      "changeset": "31f60a0117c5e0762ebfc616c054c2e3d5c6e7be"
+    },
+    "ne-NP": {
+      "date": "2019-11-16 08:14 +0100",
+      "changeset": "59045b55485e2205dc2b060cd84140f67f3d2971"
+    },
+    "nl": {
+      "date": "2019-11-17 11:53 +0000",
+      "changeset": "9da6ff00a29dcc6676c7dbfff76f879971c11fa0"
+    },
+    "nn-NO": {
+      "date": "2019-11-17 13:14 +0000",
+      "changeset": "ce243fdc3dd1cc69da0a955a6ad605adb0fe598f"
+    },
+    "oc": {
+      "date": "2019-11-17 12:52 +0000",
+      "changeset": "afda6597350472a821da7f920fd1af4626646d35"
+    },
+    "pa-IN": {
+      "date": "2019-11-16 08:15 +0100",
+      "changeset": "4d2f17e006b843a9af03785ec4838f800fe38154"
+    },
+    "pl": {
+      "date": "2019-11-17 15:13 +0000",
+      "changeset": "7e6537751a6ab3662fdc94d676ce70626cf66dab"
+    },
+    "pt-BR": {
+      "date": "2019-11-19 15:54 +0000",
+      "changeset": "ff51fa60da52f57cfe655452d590176dae755ec5"
+    },
+    "pt-PT": {
+      "date": "2019-11-19 03:14 +0000",
+      "changeset": "29e1d5cbb9879fbcb1eb2c1f090a0200eaa2e87d"
+    },
+    "rm": {
+      "date": "2019-11-19 04:53 +0000",
+      "changeset": "5c327361a9b5e239297e9309a7c6e78d49929e75"
+    },
+    "ro": {
+      "date": "2019-11-16 08:17 +0100",
+      "changeset": "82ee27288fa07a12b523f5ac3f6c4d7f15936d3b"
+    },
+    "ru": {
+      "date": "2019-11-17 03:12 +0000",
+      "changeset": "9da20f085f9a4e7fc5a54df25ff7aa08425d06ed"
+    },
+    "si": {
+      "date": "2019-11-16 08:18 +0100",
+      "changeset": "9ed40a954b9497f4f5009dffe5aa63b9b825853c"
+    },
+    "sk": {
+      "date": "2019-11-18 17:14 +0000",
+      "changeset": "c3fd63d0d8f03c75e448975d02072938bfd63f34"
+    },
+    "sl": {
+      "date": "2019-11-19 10:54 +0000",
+      "changeset": "fe64dc7d511f8f2c4908649d2fdbdb13189d3f60"
+    },
+    "son": {
+      "date": "2019-11-16 08:19 +0100",
+      "changeset": "6b24bc0c2d196f2c8db5d09d60e8b1fcc9eeb858"
+    },
+    "sq": {
+      "date": "2019-11-16 08:19 +0100",
+      "changeset": "cd6eda9a6d5a9b7102c59e3f6ef01d93d2cb7114"
+    },
+    "sr": {
+      "date": "2019-11-16 08:19 +0100",
+      "changeset": "38a787c176f840562af3edcb94d5d52c2672170a"
+    },
+    "sv-SE": {
+      "date": "2019-11-16 14:35 +0000",
+      "changeset": "88edcab7907801c7a6d55963ca96f8b0ca3e5f80"
+    },
+    "ta": {
+      "date": "2019-11-16 08:20 +0100",
+      "changeset": "332154d7369feb27d702c67a93a2a177f1b5d34e"
+    },
+    "te": {
+      "date": "2019-11-16 08:21 +0100",
+      "changeset": "1555726ae741678f757fc394bc3435d9bde04203"
+    },
+    "th": {
+      "date": "2019-11-16 08:21 +0100",
+      "changeset": "489f73291f49832c36e8f5dcb54eb7e2f0004afe"
+    },
+    "tl": {
+      "date": "2019-11-18 18:39 +0000",
+      "changeset": "3c7e4aa5d224b225ad88cfabdd84da2f4e676e89"
+    },
+    "tr": {
+      "date": "2019-11-20 13:18 +0000",
+      "changeset": "d27df19ff54057b57746ce4f1cf6cfc3db1048cc"
+    },
+    "trs": {
+      "date": "2019-11-20 02:13 +0000",
+      "changeset": "95c9c8139caa2e429e123eed5ee90a8ac4ed3582"
+    },
+    "uk": {
+      "date": "2019-11-18 15:15 +0000",
+      "changeset": "daf80d44172e6c62c4b89536d241806ed6a46e93"
+    },
+    "ur": {
+      "date": "2019-11-16 08:23 +0100",
+      "changeset": "d0a40cbeccd763f32ea76c88256f813d6f02deb8"
+    },
+    "uz": {
+      "date": "2019-11-16 08:23 +0100",
+      "changeset": "2e0a003c2a35092b56b9dfedafeff26d6b5e9ee4"
+    },
+    "vi": {
+      "date": "2019-11-20 05:57 +0000",
+      "changeset": "ea4997e9686116d5a51fced9d38e616c1f9627f4"
+    },
+    "xh": {
+      "date": "2019-11-16 08:23 +0100",
+      "changeset": "1b1af169435da438e50aa44808e1a55e58a33c17"
+    },
+    "zh-CN": {
+      "date": "2019-11-16 09:52 +0000",
+      "changeset": "564499850e71e3df8842babb9a4c8468735726cb"
+    },
+    "zh-TW": {
+      "date": "2019-11-16 13:52 +0000",
+      "changeset": "d1ae13717dce0f82d3dd62d354dee25077d43e5f"
+    }
+  },
+  "72.0": {
+    "ach": {
+      "date": "2019-12-18 18:33 +0100",
+      "changeset": "34d6cdb271127f3a44e9d3e128e227a437f4633f"
+    },
+    "af": {
+      "date": "2019-12-18 18:07 +0100",
+      "changeset": "dd8b2b75acdbfe47eecdff48c171315d4b2da7e4"
+    },
+    "an": {
+      "date": "2019-12-19 15:54 +0000",
+      "changeset": "0c30971972903c09c49e8844c33ff3ff513e3a80"
+    },
+    "ar": {
+      "date": "2019-12-21 15:54 +0000",
+      "changeset": "a8057bdc01a61c7bea7713d415da3bc6c37c1651"
+    },
+    "ast": {
+      "date": "2019-12-18 18:34 +0100",
+      "changeset": "38e5054bb10f8987295e255b00df40b8d9dfba09"
+    },
+    "az": {
+      "date": "2019-12-18 18:34 +0100",
+      "changeset": "02b8a6d7bc58fb46211f92a4f1e031d10f232f71"
+    },
+    "be": {
+      "date": "2019-12-24 19:14 +0000",
+      "changeset": "758deed002aab59dc48473dcba53351f23a8ea79"
+    },
+    "bg": {
+      "date": "2019-12-18 18:34 +0100",
+      "changeset": "3ea824c5250c968d5aab284a0b9db64617d4ace6"
+    },
+    "bn": {
+      "date": "2019-12-18 18:09 +0100",
+      "changeset": "0a7b56a5106fdb3af9fced4b3731583c0984f378"
+    },
+    "br": {
+      "date": "2019-12-20 18:13 +0000",
+      "changeset": "cbf5e4f60e86added50258cb58df3bb48d5bb8b1"
+    },
+    "bs": {
+      "date": "2019-12-18 18:34 +0100",
+      "changeset": "53d4a3d109cc899eca5b18c9619e56daafb4c34a"
+    },
+    "ca": {
+      "date": "2019-12-18 18:34 +0100",
+      "changeset": "4a6822c751b455ae826fafa8483492d64a3f09b9"
+    },
+    "ca-valencia": {
+      "date": "2019-12-20 07:42 +0100",
+      "changeset": "44d849d6f1815e912274ce13baffcfd4d8002850"
+    },
+    "cak": {
+      "date": "2019-12-24 01:32 +0000",
+      "changeset": "d2e2c21884c4a9a9c8d5b0d40ae0eb2289233fc1"
+    },
+    "cs": {
+      "date": "2019-12-19 07:14 +0000",
+      "changeset": "145e872f8c9fa2bedaf4722532c86831bb5a720e"
+    },
+    "cy": {
+      "date": "2019-12-24 12:33 +0000",
+      "changeset": "19ab41f192d8d5fff48bf75fedfe2f07f493d16c"
+    },
+    "da": {
+      "date": "2019-12-24 10:42 +0100",
+      "changeset": "80543420697a902e3f56b4249f7c018d4f8804e1"
+    },
+    "de": {
+      "date": "2019-12-24 17:14 +0000",
+      "changeset": "6a5c5539cbca3ac50cd3ef215d8d9f5c477feb9e"
+    },
+    "dsb": {
+      "date": "2019-12-19 13:35 +0000",
+      "changeset": "6cf72fab5a81a60671d610737a27baa082f8022d"
+    },
+    "el": {
+      "date": "2019-12-24 13:14 +0000",
+      "changeset": "82e4dbdf5ba9743255f0f76b9cc46bd864146d88"
+    },
+    "en-CA": {
+      "date": "2019-12-24 03:54 +0000",
+      "changeset": "f39758199dbb5d4e2a106550482804ceb03a9da9"
+    },
+    "en-GB": {
+      "date": "2019-12-19 00:54 +0000",
+      "changeset": "478bd11a708f677efd150746511295ba066d9e56"
+    },
+    "eo": {
+      "date": "2019-12-18 18:13 +0100",
+      "changeset": "cea0da10dc5ae4003fe054fa64f5c0ec0a643032"
+    },
+    "es-AR": {
+      "date": "2019-12-20 00:34 +0000",
+      "changeset": "9bf26e2a8ff8df6718110b20fe2d057fd317564e"
+    },
+    "es-CL": {
+      "date": "2019-12-18 18:13 +0100",
+      "changeset": "4769067f86c847d2517779efcc5ab8a811b68b67"
+    },
+    "es-ES": {
+      "date": "2019-12-22 17:15 +0000",
+      "changeset": "3c8d8b95cae4ea3881afd66d15f88333bdaf659e"
+    },
+    "es-MX": {
+      "date": "2019-12-18 18:13 +0100",
+      "changeset": "bed63a425aa98b6e1c9dd523821df683c3a9bd5a"
+    },
+    "et": {
+      "date": "2019-12-18 18:35 +0100",
+      "changeset": "8bced423f38d485e4a346099b597ed91f6a05163"
+    },
+    "eu": {
+      "date": "2019-12-19 22:14 +0000",
+      "changeset": "ed5ee0f2b6dfbd8d177f268a45d29fac81fed018"
+    },
+    "fa": {
+      "date": "2019-12-18 18:35 +0100",
+      "changeset": "e8b23ea2e974e62524421a88ad37fe0a06d2e045"
+    },
+    "ff": {
+      "date": "2019-12-18 18:35 +0100",
+      "changeset": "056c8a2e7bf317659d9e826a3dab057615dda08a"
+    },
+    "fi": {
+      "date": "2019-12-22 14:35 +0000",
+      "changeset": "1db8a5cc09c1b9e703db1c25268cf217fe29e38a"
+    },
+    "fr": {
+      "date": "2019-12-24 10:13 +0000",
+      "changeset": "6cb0fb1c6e7edc78adaf3bd31261dd48dba5e778"
+    },
+    "fy-NL": {
+      "date": "2019-12-23 09:54 +0000",
+      "changeset": "ef9849e6bec57fd50a4634caaf8dedaf6e9fd7de"
+    },
+    "ga-IE": {
+      "date": "2019-12-18 18:35 +0100",
+      "changeset": "72298b9e6d1667cdc1b2258acb526d3aefa27c17"
+    },
+    "gd": {
+      "date": "2019-12-18 18:35 +0100",
+      "changeset": "e6f12faf40093a97ad7892b79db2a3084e4c3681"
+    },
+    "gl": {
+      "date": "2019-12-18 18:35 +0100",
+      "changeset": "27d65f81e990c570574c1385d4d7efceef38f124"
+    },
+    "gn": {
+      "date": "2019-12-23 11:14 +0000",
+      "changeset": "eaf02080990c895b860406732744ad90a0cc3514"
+    },
+    "gu-IN": {
+      "date": "2019-12-18 18:36 +0100",
+      "changeset": "c14df9b492bba2c101fb2a948d63559ccee02179"
+    },
+    "he": {
+      "date": "2019-12-25 06:53 +0000",
+      "changeset": "98313250ea2e78d21ddce0a304393eb4403b65b9"
+    },
+    "hi-IN": {
+      "date": "2019-12-18 18:16 +0100",
+      "changeset": "ff79fdb1ce99df75d723c32e67f8ea879fc1dff7"
+    },
+    "hr": {
+      "date": "2019-12-18 20:09 +0000",
+      "changeset": "eed9df279677182d2afea99705970d5858c397dc"
+    },
+    "hsb": {
+      "date": "2019-12-19 13:35 +0000",
+      "changeset": "5c622861ead54771beb6537fb57fac2a6b67b8b5"
+    },
+    "hu": {
+      "date": "2019-12-21 22:35 +0000",
+      "changeset": "59479503b3a2efb363b895cbd280d4f723bff8b2"
+    },
+    "hy-AM": {
+      "date": "2019-12-27 07:49 +0000",
+      "changeset": "37f02bddb1c24eaeb176659abdb4f6220b24c747"
+    },
+    "ia": {
+      "date": "2019-12-24 15:35 +0000",
+      "changeset": "ad73be2eab7f2e98d5786b83768bab01012f2f6d"
+    },
+    "id": {
+      "date": "2019-12-24 14:34 +0000",
+      "changeset": "650bac3e499fc09c39f65e6d6301781d5aadafcc"
+    },
+    "is": {
+      "date": "2019-12-18 18:36 +0100",
+      "changeset": "1bddbc8b5f1c002e657806dabf94ee8a5e29f75d"
+    },
+    "it": {
+      "date": "2019-12-24 17:40 +0100",
+      "changeset": "545c1de68362662959f1139646d85887559531e6"
+    },
+    "ja": {
+      "date": "2019-12-23 23:37 +0900",
+      "changeset": "b495e5eba888b081a989f692678ef6a099a2006d"
+    },
+    "ja-JP-mac": {
+      "date": "2019-12-23 23:37 +0900",
+      "changeset": "691b5174f97bc40217f7eae47e0fa6f88062a96c"
+    },
+    "ka": {
+      "date": "2019-12-19 05:35 +0000",
+      "changeset": "b5713f8dc8141ac78b48250622b9582e4dabc13b"
+    },
+    "kab": {
+      "date": "2019-12-24 21:34 +0000",
+      "changeset": "900227040a51cff594aee9b8c670b99593ee8646"
+    },
+    "kk": {
+      "date": "2019-12-20 15:58 +0000",
+      "changeset": "7eb16ea4c84dc95583101f045f9925de0e7fe5a6"
+    },
+    "km": {
+      "date": "2019-12-18 18:19 +0100",
+      "changeset": "03f407bb9f14ecd512ed6ebbfa88bd71a5547a88"
+    },
+    "kn": {
+      "date": "2019-12-18 18:36 +0100",
+      "changeset": "497ca46d4452028b6fabeb21c6d61ba352362262"
+    },
+    "ko": {
+      "date": "2019-12-23 08:19 +0000",
+      "changeset": "d4209c160f33e1431573d8c8b7becdb7378b484c"
+    },
+    "lij": {
+      "date": "2019-12-18 18:36 +0100",
+      "changeset": "fcaca57dd1c7c5c61ca303b71605ec66ae2fa1ec"
+    },
+    "lt": {
+      "date": "2019-12-24 11:54 +0000",
+      "changeset": "1dbac06aa62b66c1d89b568ed0928a625ee93301"
+    },
+    "lv": {
+      "date": "2019-12-18 18:37 +0100",
+      "changeset": "aa7054f66ee34a8261bd26344479b87db71d4283"
+    },
+    "mk": {
+      "date": "2019-12-18 18:21 +0100",
+      "changeset": "e659bd876ca372e839db4a4cc809c437ea3dd5a2"
+    },
+    "mr": {
+      "date": "2019-12-18 18:22 +0100",
+      "changeset": "7a6b14b27c6e100014aca67a01aed5a8ba41ee46"
+    },
+    "ms": {
+      "date": "2019-12-18 18:37 +0100",
+      "changeset": "742c894aa1ac0351dfd3d8f8f05fb1e8ccd32836"
+    },
+    "my": {
+      "date": "2019-12-18 17:54 +0100",
+      "changeset": "6210b2fc83b4d15318e9853c45008381a090079d"
+    },
+    "nb-NO": {
+      "date": "2019-12-22 21:41 +0000",
+      "changeset": "960e47b63b4ad51f258eec20f59f0275821eddc7"
+    },
+    "ne-NP": {
+      "date": "2019-12-18 18:37 +0100",
+      "changeset": "6fc3f6a482c05f0fa859f00452e56753c79fc031"
+    },
+    "nl": {
+      "date": "2019-12-20 15:34 +0000",
+      "changeset": "bee05b3610f178074b8050b082d6d8f1460144f7"
+    },
+    "nn-NO": {
+      "date": "2019-12-22 16:34 +0000",
+      "changeset": "b707e03ce425d116d576a2fc322105640f2b1835"
+    },
+    "oc": {
+      "date": "2019-12-18 18:37 +0100",
+      "changeset": "a4ad9b1b5bbecdb41d8fd0ae98eca2dfb0bf2882"
+    },
+    "pa-IN": {
+      "date": "2019-12-24 11:54 +0000",
+      "changeset": "63c02bab23b149bcf0d15094530b7b304b0bc856"
+    },
+    "pl": {
+      "date": "2019-12-23 16:54 +0000",
+      "changeset": "ec53e4c539beec0fefa92a74282ea3124642aae6"
+    },
+    "pt-BR": {
+      "date": "2019-12-20 08:35 +0000",
+      "changeset": "48a2ce8a90aacb58f638178de94c103b44c78fed"
+    },
+    "pt-PT": {
+      "date": "2019-12-18 18:24 +0100",
+      "changeset": "111fa0aae6e6d482805f3869c171e9c5fee076da"
+    },
+    "rm": {
+      "date": "2019-12-18 18:24 +0100",
+      "changeset": "acd0c2107125e26db18043ddb9030f3f6a6c346c"
+    },
+    "ro": {
+      "date": "2019-12-18 18:37 +0100",
+      "changeset": "1a12d420b20f059a3c00c1da39fb47cc9de7c7c8"
+    },
+    "ru": {
+      "date": "2019-12-21 14:35 +0000",
+      "changeset": "91a05771b7bae3353a239e7080cb9fad9004d272"
+    },
+    "si": {
+      "date": "2019-12-18 18:25 +0100",
+      "changeset": "8b2114505b6baf3fee4bc0f6c4ff15eac1af60bf"
+    },
+    "sk": {
+      "date": "2019-12-22 22:54 +0000",
+      "changeset": "cb2cd511f25601814bffbcd56cfbf96e14fbea3f"
+    },
+    "sl": {
+      "date": "2019-12-24 10:53 +0000",
+      "changeset": "560d8f5c9fbc8b3f2ed4db6a2d8e4784f244a4f7"
+    },
+    "son": {
+      "date": "2019-12-18 17:52 +0100",
+      "changeset": "574aaf1ede553560d5d2005d56b483abecf892b7"
+    },
+    "sq": {
+      "date": "2019-12-19 16:34 +0000",
+      "changeset": "bec3a0cc67867774b94f183cc83515f93f74e7c8"
+    },
+    "sr": {
+      "date": "2019-12-18 18:38 +0100",
+      "changeset": "c3f6ddcc690c3cae353898dbd1d00a35b012b81c"
+    },
+    "sv-SE": {
+      "date": "2019-12-21 12:54 +0000",
+      "changeset": "537ae734bb18b14247c0ad3ad0f0df109852f6f7"
+    },
+    "ta": {
+      "date": "2019-12-22 13:13 +0000",
+      "changeset": "005607af5182935b392ac71741f73fc750064ca0"
+    },
+    "te": {
+      "date": "2019-12-18 18:38 +0100",
+      "changeset": "0efb4cb2cf4ace721fedce33746bcb9d60fb4ca8"
+    },
+    "th": {
+      "date": "2019-12-21 23:54 +0000",
+      "changeset": "72fcb3400f24499c8b503adab59d7c64e938d3f8"
+    },
+    "tl": {
+      "date": "2019-12-18 18:27 +0100",
+      "changeset": "52369abe4607f7d15582cad7653640c51660c8f9"
+    },
+    "tr": {
+      "date": "2019-12-20 10:53 +0000",
+      "changeset": "3917267ff06dbc79574ed98032f9aa39e1dea211"
+    },
+    "trs": {
+      "date": "2019-12-23 17:14 +0000",
+      "changeset": "344e24a6aefabaa2bf8a8861f7893c3091955df6"
+    },
+    "uk": {
+      "date": "2019-12-20 11:34 +0000",
+      "changeset": "633d9716da49b7c5685fb99b9ea0cf8d0087b473"
+    },
+    "ur": {
+      "date": "2019-12-23 13:13 +0000",
+      "changeset": "ad3e05a8c9640748ea1c1a74ff4dd557c0194a12"
+    },
+    "uz": {
+      "date": "2019-12-18 17:59 +0100",
+      "changeset": "0c256353a3c79acd044898d586ca071f4fcd2a35"
+    },
+    "vi": {
+      "date": "2019-12-18 18:00 +0100",
+      "changeset": "2c3fa1649812f6765bb9385812c500cf275cc355"
+    },
+    "xh": {
+      "date": "2019-12-18 18:01 +0100",
+      "changeset": "1fca9a880e70702a21a63bb0d03466e280c29ca3"
+    },
+    "zh-CN": {
+      "date": "2019-12-19 01:34 +0000",
+      "changeset": "09634fc64de70ad4f334c3460af2770f531a7564"
+    },
+    "zh-TW": {
+      "date": "2019-12-21 03:14 +0000",
+      "changeset": "b7c81bbac3ab02454d5b086ad55feeea010376aa"
+    }
+  },
   "73.0": {
     "ach": {
       "date": "2020-01-26 14:47 +0100",
