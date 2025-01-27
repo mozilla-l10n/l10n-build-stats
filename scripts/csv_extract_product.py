@@ -58,13 +58,14 @@ def main():
 
     csv_file = os.path.join(stats_path, f"{product}_locales.csv")
     with open(csv_file, "w") as csv_file:
-        fieldnames = ["Version"] + locales
+        fieldnames = ["Version", "Major version"] + locales
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames, lineterminator="\n")
 
         writer.writeheader()
         for version, percentages in locale_data.items():
             row = {
-                "Version": f"'{version}"
+                "Version": f"'{version}",
+                "Major version": int(version.split(".")[0]),
             }  # Force as string when imported in Google Sheets
             row.update(percentages)
             writer.writerow(row)
