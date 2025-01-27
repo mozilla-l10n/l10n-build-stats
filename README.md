@@ -28,3 +28,12 @@ Scripts are available in [this gist](https://gist.github.com/flodolo/eaed76d43e5
 Data is generated from the archived GitHub repository
 [mozilla-mobile/firefox-android](https://github.com/mozilla-mobile/firefox-android),
 using tags as reference (e.g. `fenix-v111.0` for v111).
+
+### Firefox for Android (v79 to v110)
+
+Data is generated from two archived repositories:
+* [fenix](https://github.com/mozilla-mobile/fenix)
+* [android-components](https://github.com/mozilla-mobile/android-components)
+
+Versions are out of sync, so using the version declared in
+`buildSrc/src/main/java/AndroidComponents.kt` within the `fenix` repository.
