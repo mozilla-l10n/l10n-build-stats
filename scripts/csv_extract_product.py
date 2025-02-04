@@ -42,19 +42,28 @@ def main():
     ]
     json_files.sort()
 
-    locale_data = {}
+    raw_build_data = {}
     locales = []
     for json_file in json_files:
         with open(os.path.join(stats_path, json_file), "r") as f:
             data = json.load(f)
             version = version_re.search(json_file).group(1).replace("_", ".")
+            major_version = version.split(".")[0]
             for locale, percentage in data.items():
-                if version not in locale_data:
-                    locale_data[version] = {}
+                if major_version not in raw_build_data:
+                    raw_build_data[major_version] = {
+                        "version": version,
+                        "completion": {},
+                    }
                 if locale not in locales:
                     locales.append(locale)
-                locale_data[version][locale] = percentage
+                raw_build_data[major_version]["completion"][locale] = percentage
     locales.sort()
+
+    # Sort the dictionary by major version
+    build_data = {
+        k: raw_build_data[k] for k in sorted(raw_build_data, key=lambda x: int(x))
+    }
 
     csv_file = os.path.join(stats_path, f"{product}_locales.csv")
     with open(csv_file, "w") as csv_file:
@@ -62,12 +71,12 @@ def main():
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames, lineterminator="\n")
 
         writer.writeheader()
-        for version, percentages in locale_data.items():
+        for major_version, version_data in build_data.items():
             row = {
-                "Version": f"'{version}",
-                "Major version": int(version.split(".")[0]),
+                "Version": f"'{version_data['version']}",
+                "Major version": int(major_version),
             }  # Force as string when imported in Google Sheets
-            row.update(percentages)
+            row.update(version_data["completion"])
             writer.writerow(row)
 
 
