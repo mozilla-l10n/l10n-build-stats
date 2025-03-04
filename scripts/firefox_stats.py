@@ -7,10 +7,10 @@
 """
 Extract completion statistics for Fenix
 
-python fenix_stats.py --path path_to_mozilla_unified_clone
+python firefox_stats.py --path path_to_mozilla_unified_clone
 """
 
-from compare_locales import parser, paths
+from compare_locales import parser
 from functions import (
     get_firefox_releases,
     read_config,
@@ -18,6 +18,7 @@ from functions import (
     update_git_repository,
     update_hg_repository,
 )
+from moz.l10n.paths import L10nConfigPaths
 import argparse
 import json
 import os
@@ -39,12 +40,12 @@ def extract_string_list(source_path, l10n_path):
     string_list = {}
 
     basedir = os.path.dirname(toml_path)
-    project_config = paths.TOMLParser().parse(toml_path, env={"l10n_base": ""})
-    basedir = os.path.join(basedir, project_config.root)
-    # Get the list of message IDs for the source locale
-    files = paths.ProjectFiles(None, [project_config])
-    for l10n_file, source_file, _, _ in files:
-        file_name = os.path.relpath(source_file, basedir)
+    project_config_paths = L10nConfigPaths(toml_path)
+    basedir = os.path.join(basedir, project_config_paths.ref_root)
+    reference_files = [ref_path for ref_path in project_config_paths.ref_paths]
+
+    for reference_file in reference_files:
+        file_name = os.path.relpath(reference_file, basedir)
         if os.path.basename(file_name).startswith("."):
             continue
 
@@ -55,7 +56,7 @@ def extract_string_list(source_path, l10n_path):
         file_extension = os.path.splitext(file_name)[1]
         try:
             file_parser = parser.getParser(file_extension)
-            file_parser.readFile(source_file)
+            file_parser.readFile(reference_file)
             entities = file_parser.parse()
             for entity in entities:
                 # Ignore Junk
