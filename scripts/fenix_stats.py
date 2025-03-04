@@ -10,13 +10,13 @@ Extract completion statistics for Firefox for Android (fenix)
 python fenix_stats.py --path path_to_mozilla_unified_clone
 """
 
-from compare_locales import paths
 from functions import (
     get_firefox_releases,
     read_config,
     store_completion,
     update_hg_repository,
 )
+from moz.l10n.paths import L10nConfigPaths, get_android_locale
 import xml.etree.ElementTree as ET
 import argparse
 import os
@@ -79,24 +79,33 @@ def extract_string_list(source_path, version):
         if not os.path.exists(toml_path):
             sys.exit(f"Missing config file {os.path.relpath(toml_path, source_path)}.")
 
-        basedir = os.path.dirname(toml_path)
-        project_config = paths.TOMLParser().parse(toml_path, env={"l10n_base": ""})
-        basedir = os.path.join(basedir, project_config.root)
+        project_config_paths = L10nConfigPaths(
+            toml_path, locale_map={"android_locale": get_android_locale}
+        )
+        basedir = project_config_paths.base
+        reference_files = [ref_path for ref_path in project_config_paths.ref_paths]
 
-        # Get the list of message IDs for the source locale
-        files = paths.ProjectFiles(None, [project_config])
-        for l10n_file, source_file, _, _ in files:
-            key = f"{product}:{os.path.relpath(source_file, basedir)}"
+        for reference_file in reference_files:
+            key = f"{product}:{os.path.relpath(reference_file, basedir)}"
             string_list[key] = {
-                "source": parse_XML_file(source_file, source=True, version=version),
+                "source": parse_XML_file(reference_file, source=True, version=version),
             }
 
-        locales = project_config.all_locales
+        locales = list(project_config_paths.all_locales)
+        locales.sort()
         # Storing a superset of all locales across TOML files
         all_locales = list(set(locales + all_locales))
         for locale in locales:
-            files = paths.ProjectFiles(locale, [project_config])
-            for l10n_file, source_file, _, _ in files:
+            files = [
+                (
+                    ref_path.format(android_locale=get_android_locale(locale)),
+                    tgt_path.format(android_locale=get_android_locale(locale)),
+                )
+                for (ref_path, tgt_path), locales in project_config_paths.all().items()
+                if locale in locales
+            ]
+
+            for source_file, l10n_file in files:
                 # Ignore missing files for locale
                 if not os.path.exists(l10n_file):
                     continue

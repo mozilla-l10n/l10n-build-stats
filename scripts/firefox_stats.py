@@ -39,9 +39,8 @@ def extract_string_list(source_path, l10n_path):
 
     string_list = {}
 
-    basedir = os.path.dirname(toml_path)
     project_config_paths = L10nConfigPaths(toml_path)
-    basedir = os.path.join(basedir, project_config_paths.ref_root)
+    basedir = project_config_paths.base
     reference_files = [ref_path for ref_path in project_config_paths.ref_paths]
 
     for reference_file in reference_files:
