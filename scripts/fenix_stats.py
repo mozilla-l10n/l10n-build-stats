@@ -95,17 +95,23 @@ def extract_string_list(source_path, version):
         locales.sort()
         # Storing a superset of all locales across TOML files
         all_locales = list(set(locales + all_locales))
+
+        all_files = [
+            (ref_path, tgt_path)
+            for (ref_path, tgt_path), _ in project_config_paths.all().items()
+        ]
         for locale in locales:
-            files = [
-                (
-                    ref_path.format(android_locale=get_android_locale(locale)),
-                    tgt_path.format(android_locale=get_android_locale(locale)),
+            locale_files = [
+                (ref_path, tgt_path)
+                for (ref_path, raw_tgt_path) in all_files
+                if os.path.exists(
+                    tgt_path := project_config_paths.format_target_path(
+                        raw_tgt_path, locale
+                    )
                 )
-                for (ref_path, tgt_path), locales in project_config_paths.all().items()
-                if locale in locales
             ]
 
-            for source_file, l10n_file in files:
+            for source_file, l10n_file in locale_files:
                 # Ignore missing files for locale
                 if not os.path.exists(l10n_file):
                     continue
