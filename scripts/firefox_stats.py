@@ -7,7 +7,7 @@
 """
 Extract completion statistics for Fenix
 
-python firefox_stats.py --path path_to_mozilla_unified_clone
+python firefox_stats.py --path path_to_mozilla_firefox_clone
 """
 
 from compare_locales import parser
@@ -16,7 +16,6 @@ from functions import (
     read_config,
     store_completion,
     update_git_repository,
-    update_hg_repository,
 )
 from moz.l10n.paths import L10nConfigPaths
 import argparse
@@ -131,7 +130,7 @@ def main():
     args = cl_parser.parse_args()
 
     version = args.version
-    [source_path, l10n_path] = read_config(["mozilla_unified_path", "l10n_path"])
+    [source_path, l10n_path] = read_config(["mozilla_firefox_path", "l10n_path"])
 
     # Get the release tags from mozilla-unified
     firefox_releases = get_firefox_releases(source_path)
@@ -139,7 +138,7 @@ def main():
         sys.exit(f"Version {version} not available as a release in repository tags")
 
     # Update the source repository to the tag
-    update_hg_repository(firefox_releases[version], source_path)
+    update_git_repository(firefox_releases[version], source_path)
 
     # Get the version of the l10n repo
     l10n_changeset = get_l10n_repo_changeset(source_path)

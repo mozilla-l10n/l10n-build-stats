@@ -7,7 +7,7 @@
 """
 Extract completion statistics for product over time, store them as CSV
 
-python extract_product.py --path path_to_mozilla_unified_clone
+python extract_product.py --path path_to_mozilla_firefox_clone
 """
 
 from functions import get_stats_path

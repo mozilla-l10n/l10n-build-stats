@@ -1,7 +1,7 @@
 # Localization Build Stats
 
 Script to extract completion levels of Firefox and Firefox for Android
-from mozilla-unified.
+from the [Firefox repository](https://github.com/mozilla-firefox/firefox).
 
 ## Data backfills
 

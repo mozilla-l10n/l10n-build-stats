@@ -67,13 +67,13 @@ def get_firefox_releases(repo_path):
     try:
         print("Extracting tags from repository")
         result = subprocess.run(
-            ["hg", "-R", repo_path, "tags"],
+            ["git", "-C", repo_path, "tag", "-l", "FIREFOX_*"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
         )
         if result.returncode != 0:
-            raise RuntimeError(f"Error running hg tags: {result.stderr}")
+            raise RuntimeError(f"Error running git tag: {result.stderr}")
 
         # Filter output using regex
         output = result.stdout
@@ -111,24 +111,6 @@ def update_git_repository(changeset, repo_path):
         if result.returncode != 0:
             raise RuntimeError(
                 f"Error git updating repository to {changeset}: {result.stderr}"
-            )
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return []
-
-
-def update_hg_repository(tag, repo_path):
-    try:
-        print(f"Updating hg repository to tag: {tag}")
-        result = subprocess.run(
-            ["hg", "-R", repo_path, "update", tag],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-        )
-        if result.returncode != 0:
-            raise RuntimeError(
-                f"Error updating hg repository to {tag}: {result.stderr}"
             )
     except Exception as e:
         print(f"An error occurred: {e}")

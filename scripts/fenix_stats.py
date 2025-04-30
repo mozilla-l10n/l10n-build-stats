@@ -7,14 +7,14 @@
 """
 Extract completion statistics for Firefox for Android (fenix)
 
-python fenix_stats.py --path path_to_mozilla_unified_clone
+python fenix_stats.py --path path_to_mozilla_firefox_clone
 """
 
 from functions import (
     get_firefox_releases,
     read_config,
     store_completion,
-    update_hg_repository,
+    update_git_repository,
 )
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
 import xml.etree.ElementTree as ET
@@ -142,7 +142,7 @@ def main():
     args = cl_parser.parse_args()
 
     version = args.version
-    [source_path] = read_config(["mozilla_unified_path"])
+    [source_path] = read_config(["mozilla_firefox_path"])
 
     # Get the release tags from mozilla-unified
     firefox_releases = get_firefox_releases(source_path)
@@ -150,7 +150,7 @@ def main():
         sys.exit(f"Version {version} not available as a release in repository tags")
 
     # Update the repository to the tag
-    update_hg_repository(firefox_releases[version], source_path)
+    update_git_repository(firefox_releases[version], source_path)
 
     # Extract list statistics
     string_list, locales = extract_string_list(source_path, version)
