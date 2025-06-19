@@ -25,7 +25,7 @@ def main():
         required=True,
         dest="product",
         help="Product name",
-        choices=["fenix", "firefox"],
+        choices=["fenix", "firefox", "fxios"],
     )
     args = cl_parser.parse_args()
 

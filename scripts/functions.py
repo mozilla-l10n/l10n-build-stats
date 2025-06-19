@@ -40,6 +40,23 @@ def read_config(params):
     return results
 
 
+def store_fxios_completion(completion_data, version, product):
+    completion = {}
+    stats_path = get_stats_path()
+    for locale, locale_data in completion_data.items():
+        if locale == "en-US":
+            continue
+        percentage = locale_data.get("percentage", 0.0)
+        completion[locale] = percentage
+        print(f"{locale}: {percentage}%")
+
+    output_file = os.path.join(
+        stats_path, f"{product}_{version.replace('.', '_')}.json"
+    )
+    with open(output_file, "w") as f:
+        json.dump(completion, f)
+
+
 def store_completion(string_list, version, locales, product):
     completion = {}
     stats_path = get_stats_path()
@@ -93,6 +110,53 @@ def get_firefox_releases(repo_path):
     except Exception as e:
         print(f"An error occurred: {e}")
         return []
+
+
+def get_fxios_releases(repo_path):
+    try:
+        print("Extracting tags from repository")
+        result = subprocess.run(
+            ["git", "-C", repo_path, "tag", "-l", "firefox-v*"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        if result.returncode != 0:
+            raise RuntimeError(f"Error running git tag: {result.stderr}")
+
+        # Filter output using regex
+        output = result.stdout
+        tag_re = re.compile(r"(firefox\-v([0-9]*.0$))")
+        filtered_lines = [line for line in output.splitlines() if tag_re.search(line)]
+
+        # Process the filtered lines to extract version
+        releases = {}
+        for line in filtered_lines:
+            match = tag_re.search(line)
+            if match:
+                tag_name = match.group(1)
+                version = match.group(2)
+                releases[version] = tag_name
+
+        return releases
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return []
+
+
+def get_ios_locale(locale):
+    locale_mapping = {
+        "ga-IE": "ga",
+        "nb-NO": "nb",
+        "nn-NO": "nn",
+        "sat": "sat-Olck",
+        "sv-SE": "sv",
+        "templates": "en",
+        "tl": "fil",
+        "zgh": "tzm",
+    }
+
+    return locale_mapping.get(locale, locale)
 
 
 def get_stats_path():
