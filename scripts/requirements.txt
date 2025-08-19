@@ -1,2 +1,3 @@
 compare-locales~=9.0.0
-moz-l10n~=0.9.0
+gspread ~= 6.2.1
+moz-l10n~=0.9.1
