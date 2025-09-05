@@ -9,11 +9,11 @@
 </head>
 <body>
   <div class="container">
-    <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px; flex-wrap: wrap;">
+    <div class="intro">
       <div>
-        <div class="badge">Localization Build Stats</div>
-        <h1 class="title">Completion per release</h1>
-        <p class="sub">A quick look at translation completeness across Firefox Desktop and Firefox for Android. The chart shows the last 20 releases for the selected locale.</p>
+        <div class="badge">Localized Builds Stats</div>
+        <h1 class="title">Completion levels per locale</h1>
+        <p class="sub">A quick look at translation completeness across Firefox Desktop and Firefox for Android. The chart shows the last 30 releases for the selected locale.</p>
       </div>
       <a href="https://github.com/flodolo/l10n-build-stats" target="_blank" rel="noopener">View repository ↗</a>
     </div>
@@ -37,7 +37,7 @@
     <p class="footer">Locale is read from the URL (e.g. <code>?locale=it</code>) or your browser’s Accept-Language header.</p>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.js" integrity="sha512-D4pL3vNgjkHR/qq+nZywuS6Hg1gwR+UzrdBW6Yg8l26revKyQHMgPq9CLJ2+HHalepS+NuGw1ayCCsGXu9JCXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="js/script.js"></script>
 </body>
 </html>

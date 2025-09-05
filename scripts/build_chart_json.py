@@ -13,7 +13,29 @@ import argparse
 import json
 import os
 import re
+import requests
+import sys
 
+def get_locale_names():
+    url = "https://pontoon.mozilla.org/api/v2/locales"
+    page = 1
+    locale_names = {}
+    try:
+        while url:
+            print(f"Reading locales (page {page})")
+            response = requests.get(url)
+            response.raise_for_status()
+            data = response.json()
+            for locale in data.get("results", {}):
+                locale_names[locale["code"]] = locale["name"]
+            # Get the next page URL
+            url = data.get("next")
+            page += 1
+
+        return locale_names
+    except requests.RequestException as e:
+        print(f"Error fetching data: {e}")
+        sys.exit()
 
 def main():
     cl_parser = argparse.ArgumentParser()
@@ -25,9 +47,13 @@ def main():
     )
     args = cl_parser.parse_args()
 
-    # Only extract data for the last 25 versions
+    # Get locale names from Pontoon
+    locale_names = get_locale_names()
+
+    # Only extract data for the last X versions
+    max_versions = 30
     version_int = int(args.version.split(".")[0])
-    versions = list(range(version_int, version_int - 25, -1))
+    versions = list(range(version_int, version_int - max_versions, -1))
 
     stats_path = get_stats_path()
     version_re = re.compile(r"_([\d_]*)")
@@ -50,7 +76,9 @@ def main():
                 version_data = json.load(f)
                 for locale, percentage in version_data.items():
                     if locale not in completion_data:
-                        completion_data[locale] = {}
+                        completion_data[locale] = {
+                            "name": locale_names.get(locale, locale),
+                        }
                     if product not in completion_data[locale]:
                         completion_data[locale][product] = {}
                     completion_data[locale][product][version_nr] = percentage

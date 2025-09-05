@@ -48,3 +48,6 @@ python scripts/csv_extract_product.py --product fenix
 
 python scripts/firefox_stats.py --version $VERSION
 python scripts/csv_extract_product.py --product firefox
+
+# Generate JSON for chart
+python scripts/build_chart_json.py --version $VERSION

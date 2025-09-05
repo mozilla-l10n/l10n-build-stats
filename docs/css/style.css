@@ -1,16 +1,10 @@
 :root {
     --bg: #f7f9fc;
-    /* Page background */
     --card: #ffffff;
-    /* Card background */
     --muted: #6b7280;
-    /* Muted text (labels, subtitles) */
     --text: #1f2937;
-    /* Main text color */
     --accent: #2563eb;
-    /* Link + focus color */
     --ring: rgba(37, 99, 235, .25);
-    /* Focus ring */
 }
 
 html,
@@ -43,13 +37,6 @@ body {
     margin: 0 0 22px;
 }
 
-.controls {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 12px;
-    align-items: end;
-}
-
 .field {
     display: grid;
     gap: 6px;
@@ -63,7 +50,7 @@ label {
 select,
 input[type="text"] {
     appearance: none;
-    background: var(--card);
+    background: var(--card) url("data:image/svg+xml;utf8,<svg fill='%236b7280' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path d='M5.25 7.5L10 12.25L14.75 7.5H5.25z'/></svg>") no-repeat right 0.8rem center/1rem;
     color: var(--text);
     border: 1px solid #e5e7eb;
     border-radius: 12px;
@@ -75,6 +62,18 @@ select:focus,
 input[type="text"]:focus {
     box-shadow: 0 0 0 4px var(--ring);
     border-color: #c7d2fe;
+}
+
+select#localeSelect {
+    width: 300px;
+}
+
+.intro {
+    display: flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .badge {
@@ -100,15 +99,6 @@ input[type="text"]:focus {
 .chart-wrap {
     position: relative;
     height: 460px;
-}
-
-.legend {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    font-size: 14px;
-    color: var(--muted);
-    margin-top: 12px;
 }
 
 .footer {
