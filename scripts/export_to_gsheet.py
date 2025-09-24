@@ -5,15 +5,31 @@ Upload a local CSV to a Google Sheet worksheet and
 resize/update a named range (same name as the sheet) to cover the full data.
 """
 
+from __future__ import annotations
+from gspread.utils import ValueInputOption
+from typing import Any, Dict, List, Mapping, Optional, TypedDict
+
 import csv
 import configparser
-from typing import List
 
 import gspread
 import os
 
 
-def read_config(root_path: str) -> dict:
+class ServiceAccountDict(TypedDict):
+    type: str
+    project_id: str
+    private_key_id: str
+    private_key: str
+    client_id: str
+    client_email: str
+    auth_uri: str
+    token_uri: str
+    auth_provider_x509_cert_url: str
+    client_x509_cert_url: str
+
+
+def read_config(root_path: str) -> Dict[str, str]:
     # Read config file in the parent folder
     config_file = os.path.join(
         root_path,
@@ -28,7 +44,7 @@ def read_config(root_path: str) -> dict:
 def read_csv(csv_path: str) -> List[List[str]]:
     with open(csv_path, "r", encoding="utf-8") as f:
         reader = csv.reader(f)
-        data = [row for row in reader]
+        data: List[List[str]] = [row for row in reader]
     # Guarantee at least a 1x1 range for empty files
     return data if data else [[""]]
 
@@ -43,13 +59,13 @@ def a1_from_rc(row: int, col: int) -> str:
     return f"{letters}{row}"
 
 
-def main():
+def main() -> None:
     root_path = os.path.join(
         os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
     )
 
-    config = read_config(root_path)
-    credentials = {
+    config: Dict[str, str] = read_config(root_path)
+    credentials: ServiceAccountDict = {
         "type": "service_account",
         "project_id": config["gspread_project_id"],
         "private_key_id": config["gspread_private_key_id"],
@@ -62,8 +78,8 @@ def main():
         "client_x509_cert_url": config["client_x509_cert_url"],
     }
 
-    connection = gspread.service_account_from_dict(credentials)
-    sh = connection.open_by_key(config["spreadsheet_key"])
+    connection: gspread.Client = gspread.service_account_from_dict(credentials)
+    sh: gspread.Spreadsheet = connection.open_by_key(config["spreadsheet_key"])
 
     for target_name in ("raw_firefox", "raw_fenix"):
         csv_path = os.path.join(
@@ -71,27 +87,27 @@ def main():
             "stats",
             target_name.removeprefix("raw_") + "_locales.csv",
         )
-        data = read_csv(csv_path)
-        rows = len(data)
-        cols = max(len(r) for r in data) if data else 1
+        data: List[List[str]] = read_csv(csv_path)
+        rows: int = len(data)
+        cols: int = max(len(r) for r in data) if data else 1
 
         # Ensure worksheet exists with sufficient size
         try:
-            ws = sh.worksheet(target_name)
+            ws: gspread.Worksheet = sh.worksheet(target_name)
             ws.resize(rows=rows, cols=cols)
             ws.clear()
         except gspread.exceptions.WorksheetNotFound:
             ws = sh.add_worksheet(
-                title=target_name, rows=str(max(rows, 1)), cols=str(max(cols, 1))
+                title=target_name, rows=max(rows, 1), cols=max(cols, 1)
             )
 
         # Write data starting at A1
-        ws.update(data, "A1", value_input_option="USER_ENTERED")
+        ws.update(data, "A1", value_input_option=ValueInputOption.user_entered)
 
         # Compute end A1 and update or add the named range on the spreadsheet
-        end_a1 = a1_from_rc(rows, cols)
-        sheet_id = ws.id
-        range = {
+        end_a1: str = a1_from_rc(rows, cols)
+        sheet_id: int = ws.id
+        range: Dict[str, int] = {
             "sheetId": sheet_id,
             "startRowIndex": 0,
             "startColumnIndex": 0,
@@ -100,13 +116,13 @@ def main():
         }
 
         # Discover existing named ranges to get the ID (if present)
-        meta = sh.fetch_sheet_metadata()
-        named_ranges = meta.get("namedRanges", []) or []
-        target = next(
+        meta: Mapping[str, Any] = sh.fetch_sheet_metadata()
+        named_ranges: List[Mapping[str, Any]] = meta.get("namedRanges", []) or []
+        target: Optional[Mapping[str, Any]] = next(
             (nr for nr in named_ranges if nr.get("name") == target_name), None
         )
 
-        requests = []
+        requests: List[Dict[str, Any]] = []
         if target and target.get("namedRangeId"):
             requests.append(
                 {
