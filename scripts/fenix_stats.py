@@ -18,6 +18,7 @@ from functions import (
     read_config,
     store_completion,
     update_git_repository,
+    StringList,
 )
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
 import xml.etree.ElementTree as ET
@@ -70,9 +71,7 @@ def parse_XML_file(
     return string_ids
 
 
-def extract_string_list(
-    source_path: str, version: str
-) -> Tuple[Dict[str, Dict[str, List[str]]], List[str]]:
+def extract_string_list(source_path: str, version: str) -> Tuple[StringList, List[str]]:
     toml_paths: Dict[str, str] = {
         "fenix": os.path.join(source_path, "mobile", "android", "fenix", "l10n.toml"),
         "android-components": os.path.join(
@@ -80,7 +79,7 @@ def extract_string_list(
         ),
     }
 
-    string_list: Dict[str, Dict[str, List[str]]] = {}
+    string_list: StringList = {}
     all_locales: List[str] = []
     locales: List[str] = []
     for product, toml_path in toml_paths.items():

@@ -10,12 +10,17 @@ Extract completion statistics for Fenix
 python firefox_stats.py --path path_to_mozilla_firefox_clone
 """
 
+from __future__ import annotations
+from typing import Any, Dict, List, Tuple
+
+
 from compare_locales import parser
 from functions import (
     get_firefox_releases,
     read_config,
     store_completion,
     update_git_repository,
+    StringList,
 )
 from moz.l10n.paths import L10nConfigPaths
 import argparse
@@ -24,26 +29,32 @@ import os
 import sys
 
 
-def extract_string_list(source_path, l10n_path):
-    toml_path = os.path.join(source_path, "browser", "locales", "l10n.toml")
+def extract_string_list(
+    source_path: str, l10n_path: str
+) -> Tuple[StringList, List[str]]:
+    toml_path: str = os.path.join(source_path, "browser", "locales", "l10n.toml")
     if not os.path.exists(toml_path):
         sys.exit(f"Missing config file {os.path.relpath(toml_path, source_path)}.")
 
     # Only look at release locales
-    locales_path = os.path.join(source_path, "browser", "locales", "shipped-locales")
+    locales_path: str = os.path.join(
+        source_path, "browser", "locales", "shipped-locales"
+    )
     with open(locales_path, "r") as f:
-        locales = f.read().splitlines()
+        locales: List[str] = f.read().splitlines()
     locales.remove("en-US")
     locales.sort()
 
-    string_list = {}
+    string_list: StringList = {}
 
-    project_config_paths = L10nConfigPaths(toml_path)
-    basedir = project_config_paths.base
-    reference_files = [ref_path for ref_path in project_config_paths.ref_paths]
+    project_config_paths: L10nConfigPaths = L10nConfigPaths(toml_path)
+    basedir: str = project_config_paths.base
+    reference_files: List[str] = [
+        ref_path for ref_path in project_config_paths.ref_paths
+    ]
 
     for reference_file in reference_files:
-        file_name = os.path.relpath(reference_file, basedir)
+        file_name: str = os.path.relpath(reference_file, basedir)
         if os.path.basename(file_name).startswith("."):
             continue
 
@@ -51,11 +62,11 @@ def extract_string_list(source_path, l10n_path):
             "source": [],
         }
 
-        file_extension = os.path.splitext(file_name)[1]
+        file_extension: str = os.path.splitext(file_name)[1]
         try:
-            file_parser = parser.getParser(file_extension)
+            file_parser: Any = parser.getParser(file_extension)
             file_parser.readFile(reference_file)
-            entities = file_parser.parse()
+            entities: List[Any] = file_parser.parse()
             for entity in entities:
                 # Ignore Junk
                 if isinstance(entity, parser.Junk):
@@ -75,7 +86,7 @@ def extract_string_list(source_path, l10n_path):
         for file_name in string_list:
             string_list[file_name][locale] = []
 
-            l10n_file_name = os.path.join(
+            l10n_file_name: str = os.path.join(
                 l10n_path, locale, file_name.replace("locales/en-US/", "")
             )
             if not os.path.exists(l10n_file_name):
@@ -84,7 +95,7 @@ def extract_string_list(source_path, l10n_path):
 
             file_extension = os.path.splitext(l10n_file_name)[1]
             try:
-                file_parser = parser.getParser(file_extension)
+                file_parser = parser.getParser(file_extension)  # type: ignore[assignment]
                 file_parser.readFile(l10n_file_name)
                 entities = file_parser.parse()
                 for entity in entities:
@@ -110,16 +121,16 @@ def extract_string_list(source_path, l10n_path):
     return string_list, locales
 
 
-def get_l10n_repo_changeset(source_path):
-    l10n_changesets = os.path.join(
+def get_l10n_repo_changeset(source_path: str) -> str:
+    l10n_changesets: str = os.path.join(
         source_path, "browser", "locales", "l10n-changesets.json"
     )
     with open(l10n_changesets, "r") as f:
-        data = json.load(f)
+        data: Dict[str, Dict[str, str]] = json.load(f)
         return data["it"]["revision"]
 
 
-def main():
+def main() -> None:
     cl_parser = argparse.ArgumentParser()
     cl_parser.add_argument(
         "--version",
@@ -129,7 +140,7 @@ def main():
     )
     args = cl_parser.parse_args()
 
-    version = args.version
+    version: str = args.version
     [source_path, l10n_path] = read_config(["mozilla_firefox_path", "l10n_path"])
 
     # Get the release tags from mozilla-unified
@@ -141,7 +152,7 @@ def main():
     update_git_repository(firefox_releases[version], source_path)
 
     # Get the version of the l10n repo
-    l10n_changeset = get_l10n_repo_changeset(source_path)
+    l10n_changeset: str = get_l10n_repo_changeset(source_path)
     update_git_repository(l10n_changeset, l10n_path)
 
     # Extract list statistics

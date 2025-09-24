@@ -11,6 +11,8 @@ from typing import (
     Pattern,
 )
 
+StringList = Dict[str, Dict[str, List[str]]]
+
 
 def read_config(params: List[str]) -> List[str]:
     # Get absolute path of the repository's root from the script location
