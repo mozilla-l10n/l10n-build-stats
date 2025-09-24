@@ -11,7 +11,7 @@ python extract_product.py --path path_to_mozilla_firefox_clone
 """
 
 from __future__ import annotations
-from typing import Dict, List, TypedDict
+from typing import TypedDict
 
 from functions import get_json_files, get_stats_path, get_version_from_filename
 import argparse
@@ -22,7 +22,7 @@ import os
 
 class BuildEntry(TypedDict):
     version: str
-    completion: Dict[str, float | int]
+    completion: dict[str, float | int]
 
 
 def main() -> None:
@@ -37,16 +37,16 @@ def main() -> None:
     args = cl_parser.parse_args()
 
     product: str = args.product
-    stats_path: str = get_stats_path()
+    stats_path = get_stats_path()
 
     # List all JSON files starting with the product name
-    json_files: List[str] = get_json_files(product)
+    json_files = get_json_files(product)
 
-    raw_build_data: Dict[str, BuildEntry] = {}
-    locales: List[str] = []
+    raw_build_data: dict[str, BuildEntry] = {}
+    locales: list[str] = []
     for json_file in json_files:
         with open(os.path.join(stats_path, json_file), "r") as f:
-            data: Dict[str, float | int] = json.load(f)
+            data: dict[str, float | int] = json.load(f)
             version, major_version = get_version_from_filename(json_file)
             for locale, percentage in data.items():
                 if major_version not in raw_build_data:
@@ -60,18 +60,18 @@ def main() -> None:
     locales.sort()
 
     # Sort the dictionary by major version
-    build_data: Dict[str, BuildEntry] = {
+    build_data: dict[str, BuildEntry] = {
         k: raw_build_data[k] for k in sorted(raw_build_data, key=lambda x: int(x))
     }
 
     csv_path: str = os.path.join(stats_path, f"{product}_locales.csv")
     with open(csv_path, "w") as csv_file:
-        fieldnames: List[str] = ["Version", "Major version"] + locales
+        fieldnames: list[str] = ["Version", "Major version"] + locales
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames, lineterminator="\n")
 
         writer.writeheader()
         for major_version, version_data in build_data.items():
-            row: Dict[str, object] = {
+            row: dict[str, object] = {
                 "Version": f"'{version_data['version']}",  # Force string in Sheets
                 "Major version": int(major_version),
             }

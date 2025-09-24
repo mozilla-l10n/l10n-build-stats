@@ -11,7 +11,7 @@ python firefox_stats.py --path path_to_mozilla_firefox_clone
 """
 
 from __future__ import annotations
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 
 from compare_locales import parser
@@ -31,7 +31,7 @@ import sys
 
 def extract_string_list(
     source_path: str, l10n_path: str
-) -> Tuple[StringList, List[str]]:
+) -> tuple[StringList, list[str]]:
     toml_path: str = os.path.join(source_path, "browser", "locales", "l10n.toml")
     if not os.path.exists(toml_path):
         sys.exit(f"Missing config file {os.path.relpath(toml_path, source_path)}.")
@@ -41,7 +41,7 @@ def extract_string_list(
         source_path, "browser", "locales", "shipped-locales"
     )
     with open(locales_path, "r") as f:
-        locales: List[str] = f.read().splitlines()
+        locales: list[str] = f.read().splitlines()
     locales.remove("en-US")
     locales.sort()
 
@@ -49,7 +49,7 @@ def extract_string_list(
 
     project_config_paths: L10nConfigPaths = L10nConfigPaths(toml_path)
     basedir: str = project_config_paths.base
-    reference_files: List[str] = [
+    reference_files: list[str] = [
         ref_path for ref_path in project_config_paths.ref_paths
     ]
 
@@ -66,7 +66,7 @@ def extract_string_list(
         try:
             file_parser: Any = parser.getParser(file_extension)
             file_parser.readFile(reference_file)
-            entities: List[Any] = file_parser.parse()
+            entities: list[Any] = file_parser.parse()
             for entity in entities:
                 # Ignore Junk
                 if isinstance(entity, parser.Junk):
@@ -126,7 +126,7 @@ def get_l10n_repo_changeset(source_path: str) -> str:
         source_path, "browser", "locales", "l10n-changesets.json"
     )
     with open(l10n_changesets, "r") as f:
-        data: Dict[str, Dict[str, str]] = json.load(f)
+        data: dict[str, dict[str, str]] = json.load(f)
         return data["it"]["revision"]
 
 

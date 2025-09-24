@@ -4,17 +4,15 @@ import re
 import subprocess
 import sys
 from typing import (
-    Dict,
-    List,
     Match,
     Optional,
     Pattern,
 )
 
-StringList = Dict[str, Dict[str, List[str]]]
+StringList = dict[str, dict[str, list[str]]]
 
 
-def read_config(params: List[str]) -> List[str]:
+def read_config(params: list[str]) -> list[str]:
     # Get absolute path of the repository's root from the script location
     root_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
     config_file = os.path.join(root_folder, "config", "config")
@@ -24,7 +22,7 @@ def read_config(params: List[str]) -> List[str]:
         sys.exit("ERROR: config file is missing")
 
     # Read all available paths in the config file
-    paths: Dict[str, str] = {}
+    paths: dict[str, str] = {}
     with open(config_file, "r") as cfg_file:
         for line in cfg_file:
             line = line.strip()
@@ -33,7 +31,7 @@ def read_config(params: List[str]) -> List[str]:
                 continue
             paths[line.split("=")[0]] = line.split("=")[1].strip('"')
 
-    results: List[str] = []
+    results: list[str] = []
     for param in params:
         if param not in paths:
             sys.exit("{} is not defined in the config file".format(param))
@@ -50,13 +48,13 @@ def read_config(params: List[str]) -> List[str]:
 
 
 def store_completion(
-    string_list: Dict[str, Dict[str, List[str]]],
+    string_list: dict[str, dict[str, list[str]]],
     version: str,
-    locales: List[str],
+    locales: list[str],
     product: str,
 ) -> None:
-    completion: Dict[str, float] = {}
-    stats_path: str = get_stats_path()
+    completion: dict[str, float] = {}
+    stats_path = get_stats_path()
     source_stats: int = sum(
         len(values.get("source", [])) for values in string_list.values()
     )
@@ -79,7 +77,7 @@ def store_completion(
         json.dump(completion, f)
 
 
-def get_firefox_releases(repo_path: str) -> Dict[str, str]:
+def get_firefox_releases(repo_path: str) -> dict[str, str]:
     try:
         print("Extracting tags from repository")
         result = subprocess.run(
@@ -94,12 +92,12 @@ def get_firefox_releases(repo_path: str) -> Dict[str, str]:
         # Filter output using regex
         output: str = result.stdout
         tag_re: Pattern[str] = re.compile(r"(FIREFOX_([0-9_]*)_RELEASE)")
-        filtered_lines: List[str] = [
+        filtered_lines: list[str] = [
             line for line in output.splitlines() if tag_re.search(line)
         ]
 
         # Process the filtered lines to extract version
-        releases: Dict[str, str] = {}
+        releases: dict[str, str] = {}
         for line in filtered_lines:
             match: Optional[Match[str]] = tag_re.search(line)
             if match:
@@ -134,10 +132,10 @@ def update_git_repository(changeset: str, repo_path: str) -> None:
         return None
 
 
-def get_json_files(product: str) -> List[str]:
+def get_json_files(product: str) -> list[str]:
     # List all JSON files starting with the product name
-    stats_path: str = get_stats_path()
-    json_files: List[str] = [
+    stats_path = get_stats_path()
+    json_files: list[str] = [
         f
         for f in os.listdir(stats_path)
         if f.startswith(product) and f.endswith(".json")

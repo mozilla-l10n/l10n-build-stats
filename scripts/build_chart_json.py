@@ -9,7 +9,7 @@ Build JSON file for charting completion statistics over time
 """
 
 from __future__ import annotations
-from typing import Any, Dict, List, TypedDict
+from typing import Any, TypedDict
 
 from functions import get_json_files, get_stats_path, get_version_from_filename
 import argparse
@@ -21,12 +21,12 @@ import sys
 
 class LocaleRecord(TypedDict, total=False):
     name: str
-    fenix: Dict[int, float | int]
-    firefox: Dict[int, float | int]
+    fenix: dict[int, float | int]
+    firefox: dict[int, float | int]
 
 
-CompletionData = Dict[str, LocaleRecord]
-LocaleNameMap = Dict[str, str]
+CompletionData = dict[str, LocaleRecord]
+LocaleNameMap = dict[str, str]
 
 
 def get_locale_names() -> LocaleNameMap:
@@ -38,7 +38,7 @@ def get_locale_names() -> LocaleNameMap:
             print(f"Reading locales (page {page})")
             response: requests.Response = requests.get(url)
             response.raise_for_status()
-            data: Dict[str, Any] = response.json()
+            data: dict[str, Any] = response.json()
             for locale in data.get("results", {}):
                 locale_names[locale["code"]] = locale["name"]
             # Get the next page URL
@@ -62,27 +62,27 @@ def main() -> None:
     args = cl_parser.parse_args()
 
     # Get locale names from Pontoon
-    locale_names: LocaleNameMap = get_locale_names()
+    locale_names = get_locale_names()
 
     # Only extract data for the last X versions
     max_versions: int = 30
     version_int: int = int(args.version.split(".")[0])
-    versions: List[str] = [
+    versions: list[str] = [
         str(v) for v in range(version_int, version_int - max_versions, -1)
     ]
 
-    stats_path: str = get_stats_path()
+    stats_path = get_stats_path()
     completion_data: CompletionData = {}
     for product in ["fenix", "firefox"]:
         # List all JSON files starting with the product name
-        json_files: List[str] = get_json_files(product)
+        json_files = get_json_files(product)
 
         for json_file in json_files:
             _, major_version = get_version_from_filename(json_file)
             if major_version not in versions:
                 continue
             with open(os.path.join(stats_path, json_file), "r") as f:
-                version_data: Dict[str, float | int] = json.load(f)
+                version_data: dict[str, float | int] = json.load(f)
                 for locale, percentage in version_data.items():
                     if locale not in completion_data:
                         completion_data[locale] = {

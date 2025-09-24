@@ -11,7 +11,6 @@ python fenix_stats.py --path path_to_mozilla_firefox_clone
 """
 
 from __future__ import annotations
-from typing import Dict, List, Tuple
 
 from functions import (
     get_firefox_releases,
@@ -29,7 +28,7 @@ import sys
 
 def parse_XML_file(
     file_path: str, source: bool = False, version: str = ""
-) -> List[str]:
+) -> list[str]:
     """
     Parse the strings.xml file and return a list of string IDs.
 
@@ -37,7 +36,7 @@ def parse_XML_file(
     tools:ignore="UnusedResources", and strings where moz:removedIn is set
     to a version smaller than the version being checked.
     """
-    string_ids: List[str] = []
+    string_ids: list[str] = []
 
     try:
         tree = ET.parse(file_path)
@@ -71,8 +70,8 @@ def parse_XML_file(
     return string_ids
 
 
-def extract_string_list(source_path: str, version: str) -> Tuple[StringList, List[str]]:
-    toml_paths: Dict[str, str] = {
+def extract_string_list(source_path: str, version: str) -> tuple[StringList, list[str]]:
+    toml_paths: dict[str, str] = {
         "fenix": os.path.join(source_path, "mobile", "android", "fenix", "l10n.toml"),
         "android-components": os.path.join(
             source_path, "mobile", "android", "android-components", "l10n.toml"
@@ -80,8 +79,8 @@ def extract_string_list(source_path: str, version: str) -> Tuple[StringList, Lis
     }
 
     string_list: StringList = {}
-    all_locales: List[str] = []
-    locales: List[str] = []
+    all_locales: list[str] = []
+    locales: list[str] = []
     for product, toml_path in toml_paths.items():
         if not os.path.exists(toml_path):
             sys.exit(f"Missing config file {os.path.relpath(toml_path, source_path)}.")
@@ -90,7 +89,7 @@ def extract_string_list(source_path: str, version: str) -> Tuple[StringList, Lis
             toml_path, locale_map={"android_locale": get_android_locale}
         )
         basedir: str = project_config_paths.base
-        reference_files: List[str] = [
+        reference_files: list[str] = [
             ref_path for ref_path in project_config_paths.ref_paths
         ]
 
