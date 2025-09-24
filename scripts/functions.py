@@ -3,6 +3,7 @@ import os
 import re
 import subprocess
 import sys
+from typing import List, Match, Pattern
 
 
 def read_config(params):
@@ -115,3 +116,26 @@ def update_git_repository(changeset, repo_path):
     except Exception as e:
         print(f"An error occurred: {e}")
         return []
+
+
+def get_json_files(product: str) -> List[str]:
+    # List all JSON files starting with the product name
+    stats_path: str = get_stats_path()
+    json_files: List[str] = [
+        f
+        for f in os.listdir(stats_path)
+        if f.startswith(product) and f.endswith(".json")
+    ]
+    json_files.sort()
+
+    return json_files
+
+
+def get_version_from_filename(filename: str) -> tuple[str, str]:
+    version_re: Pattern[str] = re.compile(r"_([\d_]*)")
+    match: Match[str] | None = version_re.search(filename)
+    assert match is not None
+    version: str = match.group(1).replace("_", ".")
+    major_version: str = version.split(".")[0]
+
+    return version, major_version

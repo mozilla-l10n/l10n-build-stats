@@ -10,15 +10,22 @@ Extract completion statistics for product over time, store them as CSV
 python extract_product.py --path path_to_mozilla_firefox_clone
 """
 
-from functions import get_stats_path
+from __future__ import annotations
+from typing import Dict, List, TypedDict
+
+from functions import get_json_files, get_stats_path, get_version_from_filename
 import argparse
 import csv
 import json
 import os
-import re
 
 
-def main():
+class BuildEntry(TypedDict):
+    version: str
+    completion: Dict[str, float | int]
+
+
+def main() -> None:
     cl_parser = argparse.ArgumentParser()
     cl_parser.add_argument(
         "--product",
@@ -29,26 +36,18 @@ def main():
     )
     args = cl_parser.parse_args()
 
-    product = args.product
-    stats_path = get_stats_path()
-
-    version_re = re.compile(r"_([\d_]*)")
+    product: str = args.product
+    stats_path: str = get_stats_path()
 
     # List all JSON files starting with the product name
-    json_files = [
-        f
-        for f in os.listdir(stats_path)
-        if f.startswith(product) and f.endswith(".json")
-    ]
-    json_files.sort()
+    json_files: List[str] = get_json_files(product)
 
-    raw_build_data = {}
-    locales = []
+    raw_build_data: Dict[str, BuildEntry] = {}
+    locales: List[str] = []
     for json_file in json_files:
         with open(os.path.join(stats_path, json_file), "r") as f:
-            data = json.load(f)
-            version = version_re.search(json_file).group(1).replace("_", ".")
-            major_version = version.split(".")[0]
+            data: Dict[str, float | int] = json.load(f)
+            version, major_version = get_version_from_filename(json_file)
             for locale, percentage in data.items():
                 if major_version not in raw_build_data:
                     raw_build_data[major_version] = {
@@ -61,21 +60,21 @@ def main():
     locales.sort()
 
     # Sort the dictionary by major version
-    build_data = {
+    build_data: Dict[str, BuildEntry] = {
         k: raw_build_data[k] for k in sorted(raw_build_data, key=lambda x: int(x))
     }
 
-    csv_file = os.path.join(stats_path, f"{product}_locales.csv")
-    with open(csv_file, "w") as csv_file:
-        fieldnames = ["Version", "Major version"] + locales
+    csv_path: str = os.path.join(stats_path, f"{product}_locales.csv")
+    with open(csv_path, "w") as csv_file:
+        fieldnames: List[str] = ["Version", "Major version"] + locales
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames, lineterminator="\n")
 
         writer.writeheader()
         for major_version, version_data in build_data.items():
-            row = {
-                "Version": f"'{version_data['version']}",
+            row: Dict[str, object] = {
+                "Version": f"'{version_data['version']}",  # Force string in Sheets
                 "Major version": int(major_version),
-            }  # Force as string when imported in Google Sheets
+            }
             row.update(version_data["completion"])
             writer.writerow(row)
 

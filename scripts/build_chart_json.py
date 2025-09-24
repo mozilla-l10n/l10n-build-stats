@@ -9,15 +9,15 @@ Build JSON file for charting completion statistics over time
 """
 
 from __future__ import annotations
-from typing import Any, Dict, List, Match, Pattern, TypedDict
+from typing import Any, Dict, List, TypedDict
 
-from functions import get_stats_path
+from functions import get_json_files, get_stats_path, get_version_from_filename
 import argparse
 import json
 import os
-import re
 import requests
 import sys
+
 
 class LocaleRecord(TypedDict, total=False):
     name: str
@@ -70,23 +70,14 @@ def main() -> None:
     versions: List[int] = list(range(version_int, version_int - max_versions, -1))
 
     stats_path: str = get_stats_path()
-    version_re: Pattern[str] = re.compile(r"_([\d_]*)")
     completion_data: CompletionData = {}
     for product in ["fenix", "firefox"]:
         # List all JSON files starting with the product name
-        json_files: List[str] = [
-            f
-            for f in os.listdir(stats_path)
-            if f.startswith(product) and f.endswith(".json")
-        ]
-        json_files.sort()
+        json_files: List[str] = get_json_files(product)
 
         for json_file in json_files:
-            match: Match[str] | None = version_re.search(json_file)
-            assert match is not None
-            version = match.group(1).replace("_", ".")
-            version_nr: int = int(version.split(".")[0])
-            if version_nr not in versions:
+            _, major_version = get_version_from_filename(json_file)
+            if major_version not in versions:
                 continue
             with open(os.path.join(stats_path, json_file), "r") as f:
                 version_data: Dict[str, float | int] = json.load(f)
@@ -97,7 +88,7 @@ def main() -> None:
                         }
                     if product not in completion_data[locale]:
                         completion_data[locale][product] = {}
-                    completion_data[locale][product][version_nr] = percentage
+                    completion_data[locale][product][major_version] = percentage
 
     output_file = os.path.abspath(
         os.path.join(os.path.dirname(__file__), os.pardir, "docs", "data", "data.json")
