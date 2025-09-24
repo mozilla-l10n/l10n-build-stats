@@ -8,6 +8,9 @@
 Build JSON file for charting completion statistics over time
 """
 
+from __future__ import annotations
+from typing import Any, Dict, List, Match, Pattern, TypedDict
+
 from functions import get_stats_path
 import argparse
 import json
@@ -16,16 +19,26 @@ import re
 import requests
 import sys
 
-def get_locale_names():
-    url = "https://pontoon.mozilla.org/api/v2/locales"
-    page = 1
-    locale_names = {}
+class LocaleRecord(TypedDict, total=False):
+    name: str
+    fenix: Dict[int, float | int]
+    firefox: Dict[int, float | int]
+
+
+CompletionData = Dict[str, LocaleRecord]
+LocaleNameMap = Dict[str, str]
+
+
+def get_locale_names() -> LocaleNameMap:
+    url: str | None = "https://pontoon.mozilla.org/api/v2/locales"
+    page: int = 1
+    locale_names: LocaleNameMap = {}
     try:
         while url:
             print(f"Reading locales (page {page})")
-            response = requests.get(url)
+            response: requests.Response = requests.get(url)
             response.raise_for_status()
-            data = response.json()
+            data: Dict[str, Any] = response.json()
             for locale in data.get("results", {}):
                 locale_names[locale["code"]] = locale["name"]
             # Get the next page URL
@@ -37,7 +50,8 @@ def get_locale_names():
         print(f"Error fetching data: {e}")
         sys.exit()
 
-def main():
+
+def main() -> None:
     cl_parser = argparse.ArgumentParser()
     cl_parser.add_argument(
         "--version",
@@ -48,19 +62,19 @@ def main():
     args = cl_parser.parse_args()
 
     # Get locale names from Pontoon
-    locale_names = get_locale_names()
+    locale_names: LocaleNameMap = get_locale_names()
 
     # Only extract data for the last X versions
-    max_versions = 30
-    version_int = int(args.version.split(".")[0])
-    versions = list(range(version_int, version_int - max_versions, -1))
+    max_versions: int = 30
+    version_int: int = int(args.version.split(".")[0])
+    versions: List[int] = list(range(version_int, version_int - max_versions, -1))
 
-    stats_path = get_stats_path()
-    version_re = re.compile(r"_([\d_]*)")
-    completion_data = {}
+    stats_path: str = get_stats_path()
+    version_re: Pattern[str] = re.compile(r"_([\d_]*)")
+    completion_data: CompletionData = {}
     for product in ["fenix", "firefox"]:
         # List all JSON files starting with the product name
-        json_files = [
+        json_files: List[str] = [
             f
             for f in os.listdir(stats_path)
             if f.startswith(product) and f.endswith(".json")
@@ -68,12 +82,14 @@ def main():
         json_files.sort()
 
         for json_file in json_files:
-            version = version_re.search(json_file).group(1).replace("_", ".")
-            version_nr = int(version.split(".")[0])
+            match: Match[str] | None = version_re.search(json_file)
+            assert match is not None
+            version = match.group(1).replace("_", ".")
+            version_nr: int = int(version.split(".")[0])
             if version_nr not in versions:
                 continue
             with open(os.path.join(stats_path, json_file), "r") as f:
-                version_data = json.load(f)
+                version_data: Dict[str, float | int] = json.load(f)
                 for locale, percentage in version_data.items():
                     if locale not in completion_data:
                         completion_data[locale] = {
