@@ -67,7 +67,9 @@ def main() -> None:
     # Only extract data for the last X versions
     max_versions: int = 30
     version_int: int = int(args.version.split(".")[0])
-    versions: List[int] = list(range(version_int, version_int - max_versions, -1))
+    versions: List[str] = [
+        str(v) for v in range(version_int, version_int - max_versions, -1)
+    ]
 
     stats_path: str = get_stats_path()
     completion_data: CompletionData = {}
