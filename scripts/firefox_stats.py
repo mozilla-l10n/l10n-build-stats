@@ -56,7 +56,7 @@ def parse_file(
                 """
                 if entry.properties:
                     for attribute in entry.properties:
-                        attr_id = f"{entry.id}.{attribute}"
+                        attr_id = f"{entry_id}.{attribute}"
                         if (
                             locale == "source"
                             or attr_id in string_list[rel_file]["source"]
