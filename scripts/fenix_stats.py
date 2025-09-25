@@ -10,11 +10,14 @@ Extract completion statistics for Firefox for Android (fenix)
 python fenix_stats.py --path path_to_mozilla_firefox_clone
 """
 
+from __future__ import annotations
+
 from functions import (
     get_firefox_releases,
     read_config,
     store_completion,
     update_git_repository,
+    StringList,
 )
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
 import xml.etree.ElementTree as ET
@@ -23,7 +26,9 @@ import os
 import sys
 
 
-def parse_XML_file(file_path, source=False, version=None):
+def parse_XML_file(
+    file_path: str, source: bool = False, version: str = ""
+) -> list[str]:
     """
     Parse the strings.xml file and return a list of string IDs.
 
@@ -31,7 +36,7 @@ def parse_XML_file(file_path, source=False, version=None):
     tools:ignore="UnusedResources", and strings where moz:removedIn is set
     to a version smaller than the version being checked.
     """
-    string_ids = []
+    string_ids: list[str] = []
 
     try:
         tree = ET.parse(file_path)
@@ -65,16 +70,17 @@ def parse_XML_file(file_path, source=False, version=None):
     return string_ids
 
 
-def extract_string_list(source_path, version):
-    toml_paths = {
+def extract_string_list(source_path: str, version: str) -> tuple[StringList, list[str]]:
+    toml_paths: dict[str, str] = {
         "fenix": os.path.join(source_path, "mobile", "android", "fenix", "l10n.toml"),
         "android-components": os.path.join(
             source_path, "mobile", "android", "android-components", "l10n.toml"
         ),
     }
 
-    string_list = {}
-    all_locales = []
+    string_list: StringList = {}
+    all_locales: list[str] = []
+    locales: list[str] = []
     for product, toml_path in toml_paths.items():
         if not os.path.exists(toml_path):
             sys.exit(f"Missing config file {os.path.relpath(toml_path, source_path)}.")
@@ -131,7 +137,7 @@ def extract_string_list(source_path, version):
     return string_list, locales
 
 
-def main():
+def main() -> None:
     cl_parser = argparse.ArgumentParser()
     cl_parser.add_argument(
         "--version",
@@ -141,7 +147,7 @@ def main():
     )
     args = cl_parser.parse_args()
 
-    version = args.version
+    version: str = args.version
     [source_path] = read_config(["mozilla_firefox_path"])
 
     # Get the release tags from mozilla-unified
