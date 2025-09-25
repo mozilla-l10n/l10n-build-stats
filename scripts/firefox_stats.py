@@ -32,8 +32,6 @@ import sys
 def parse_file(
     file_path: str, rel_file: str, locale: str, string_list: StringList
 ) -> None:
-    file_extension = os.path.splitext(rel_file)[1]
-
     if rel_file not in string_list:
         string_list[rel_file] = {}
     if locale not in string_list[rel_file]:
@@ -56,7 +54,7 @@ def parse_file(
                 translation with missing attributes. Just an additional check
                 in case something went wrong (manual edits, migrations).
                 """
-                if file_extension == ".ftl" and entry.properties:
+                if entry.properties:
                     for attribute in entry.properties:
                         attr_id = f"{entry.id}.{attribute}"
                         if (
