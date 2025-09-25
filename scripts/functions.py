@@ -135,7 +135,7 @@ def update_git_repository(changeset: str, repo_path: str) -> None:
 def get_json_files(product: str) -> list[str]:
     # List all JSON files starting with the product name
     stats_path = get_stats_path()
-    json_files: list[str] = [
+    json_files = [
         f
         for f in os.listdir(stats_path)
         if f.startswith(product) and f.endswith(".json")
@@ -146,7 +146,7 @@ def get_json_files(product: str) -> list[str]:
 
 
 def get_version_from_filename(filename: str) -> tuple[str, str]:
-    version_re: Pattern[str] = re.compile(r"_([\d_]*)")
+    version_re = re.compile(r"_([\d_]*)")
     match: Optional[Match[str]] = version_re.search(filename)
     assert match is not None
     version: str = match.group(1).replace("_", ".")

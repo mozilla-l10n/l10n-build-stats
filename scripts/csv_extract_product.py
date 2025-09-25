@@ -64,7 +64,7 @@ def main() -> None:
         k: raw_build_data[k] for k in sorted(raw_build_data, key=lambda x: int(x))
     }
 
-    csv_path: str = os.path.join(stats_path, f"{product}_locales.csv")
+    csv_path = os.path.join(stats_path, f"{product}_locales.csv")
     with open(csv_path, "w") as csv_file:
         fieldnames: list[str] = ["Version", "Major version"] + locales
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames, lineterminator="\n")

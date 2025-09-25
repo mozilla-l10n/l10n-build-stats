@@ -9,7 +9,7 @@ Build JSON file for charting completion statistics over time
 """
 
 from __future__ import annotations
-from typing import Any, TypedDict
+from typing import Any, Dict, TypedDict
 
 from functions import get_json_files, get_stats_path, get_version_from_filename
 import argparse
@@ -25,18 +25,18 @@ class LocaleRecord(TypedDict, total=False):
     firefox: dict[int, float | int]
 
 
-CompletionData = dict[str, LocaleRecord]
-LocaleNameMap = dict[str, str]
+CompletionData = Dict[str, LocaleRecord]
+LocaleNameMap = Dict[str, str]
 
 
 def get_locale_names() -> LocaleNameMap:
     url: str | None = "https://pontoon.mozilla.org/api/v2/locales"
-    page: int = 1
+    page = 1
     locale_names: LocaleNameMap = {}
     try:
         while url:
             print(f"Reading locales (page {page})")
-            response: requests.Response = requests.get(url)
+            response = requests.get(url)
             response.raise_for_status()
             data: dict[str, Any] = response.json()
             for locale in data.get("results", {}):
@@ -65,9 +65,9 @@ def main() -> None:
     locale_names = get_locale_names()
 
     # Only extract data for the last X versions
-    max_versions: int = 30
-    version_int: int = int(args.version.split(".")[0])
-    versions: list[str] = [
+    max_versions = 30
+    version_int = int(args.version.split(".")[0])
+    versions = [
         str(v) for v in range(version_int, version_int - max_versions, -1)
     ]
 

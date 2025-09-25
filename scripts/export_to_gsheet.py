@@ -88,8 +88,8 @@ def main() -> None:
             target_name.removeprefix("raw_") + "_locales.csv",
         )
         data: list[list[str]] = read_csv(csv_path)
-        rows: int = len(data)
-        cols: int = max(len(r) for r in data) if data else 1
+        rows = len(data)
+        cols = max(len(r) for r in data) if data else 1
 
         # Ensure worksheet exists with sufficient size
         try:
