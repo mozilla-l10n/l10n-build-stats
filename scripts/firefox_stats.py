@@ -11,10 +11,7 @@ python firefox_stats.py --path path_to_mozilla_firefox_clone
 """
 
 from __future__ import annotations
-from typing import Any
 
-
-from compare_locales import parser
 from functions import (
     get_firefox_releases,
     read_config,
@@ -22,11 +19,55 @@ from functions import (
     update_git_repository,
     StringList,
 )
+from moz.l10n.formats import UnsupportedFormat
+from moz.l10n.model import Entry
 from moz.l10n.paths import L10nConfigPaths
+from moz.l10n.resource import parse_resource
 import argparse
 import json
 import os
 import sys
+
+
+def parse_file(
+    file_path: str, rel_file: str, locale: str, string_list: StringList
+) -> None:
+    if rel_file not in string_list:
+        string_list[rel_file] = {}
+    if locale not in string_list[rel_file]:
+        string_list[rel_file][locale] = []
+
+    try:
+        resource = parse_resource(file_path)
+        for section in resource.sections:
+            for entry in section.entries:
+                if not isinstance(entry, Entry):
+                    continue
+
+                entry_id = ".".join(section.id + entry.id)
+                if locale == "source" or entry_id in string_list[rel_file]["source"]:
+                    string_list[rel_file][locale].append(entry_id)
+
+                """
+                This step is not strictly necessary: we could just look at
+                the message since Pontoon will prevent from saving a
+                translation with missing attributes. Just an additional check
+                in case something went wrong (manual edits, migrations).
+                """
+                if entry.properties:
+                    for attribute in entry.properties:
+                        attr_id = f"{entry.id}.{attribute}"
+                        if (
+                            locale == "source"
+                            or attr_id in string_list[rel_file]["source"]
+                        ):
+                            string_list[rel_file][locale].append(attr_id)
+    except UnsupportedFormat:
+        if locale == "source":
+            print(f"Unsupported format: {rel_file}")
+    except Exception as e:
+        print(f"Error parsing file: {rel_file}")
+        print(e)
 
 
 def extract_string_list(
@@ -52,69 +93,24 @@ def extract_string_list(
     reference_files = [ref_path for ref_path in project_config_paths.ref_paths]
 
     for reference_file in reference_files:
-        file_name: str = os.path.relpath(reference_file, basedir)
-        if os.path.basename(file_name).startswith("."):
-            continue
-
-        string_list[file_name] = {
-            "source": [],
-        }
-
-        file_extension: str = os.path.splitext(file_name)[1]
-        try:
-            file_parser: Any = parser.getParser(file_extension)
-            file_parser.readFile(reference_file)
-            entities: list[Any] = file_parser.parse()
-            for entity in entities:
-                # Ignore Junk
-                if isinstance(entity, parser.Junk):
-                    continue
-                string_list[file_name]["source"].append(str(entity))
-                if file_extension == ".ftl":
-                    # Store attributes separately
-                    for attribute in entity.attributes:
-                        attr_string_id = f"{entity}.{attribute}"
-                        string_list[file_name]["source"].append(attr_string_id)
-        except Exception as e:
-            print(f"Error parsing file: {file_name}")
-            string_list.pop(file_name)
-            print(e)
+        rel_file: str = os.path.relpath(reference_file, basedir)
+        parse_file(reference_file, rel_file, "source", string_list)
 
     for locale in locales:
-        for file_name in string_list:
-            string_list[file_name][locale] = []
-
+        missing_files: list[str] = []
+        for rel_file in string_list:
             l10n_file_name: str = os.path.join(
-                l10n_path, locale, file_name.replace("locales/en-US/", "")
+                l10n_path, locale, rel_file.replace("locales/en-US/", "")
             )
             if not os.path.exists(l10n_file_name):
-                print(f"Missing file for {locale}: {l10n_file_name}")
+                missing_files.append(os.path.relpath(l10n_file_name, l10n_path))
                 continue
 
-            file_extension = os.path.splitext(l10n_file_name)[1]
-            try:
-                file_parser = parser.getParser(file_extension)
-                file_parser.readFile(l10n_file_name)
-                entities = file_parser.parse()
-                for entity in entities:
-                    # Ignore Junk
-                    if isinstance(entity, parser.Junk):
-                        continue
-                    # Don't count entity or attribute if it doesn't exist in source
-                    entity_id = str(entity)
-                    if entity_id in string_list[file_name]["source"]:
-                        string_list[file_name][locale].append(entity_id)
-                    if file_extension == ".ftl":
-                        # Store attributes separately
-                        for attribute in entity.attributes:
-                            attr_string_id = f"{entity}.{attribute}"
-                            if attr_string_id in string_list[file_name]["source"]:
-                                string_list[file_name][locale].append(attr_string_id)
-            except Exception as e:
-                print(
-                    f"Error parsing file: {os.path.relpath(l10n_file_name, l10n_path)}"
-                )
-                print(e)
+            parse_file(l10n_file_name, rel_file, locale, string_list)
+        if missing_files:
+            print(f"Missing {len(missing_files)} files for locale {locale}:")
+            for missing_file in missing_files:
+                print(f"  {missing_file}")
 
     return string_list, locales
 
