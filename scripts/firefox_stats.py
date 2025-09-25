@@ -47,11 +47,9 @@ def extract_string_list(
 
     string_list: StringList = {}
 
-    project_config_paths: L10nConfigPaths = L10nConfigPaths(toml_path)
-    basedir: str = project_config_paths.base
-    reference_files: list[str] = [
-        ref_path for ref_path in project_config_paths.ref_paths
-    ]
+    project_config_paths = L10nConfigPaths(toml_path)
+    basedir = project_config_paths.base
+    reference_files = [ref_path for ref_path in project_config_paths.ref_paths]
 
     for reference_file in reference_files:
         file_name: str = os.path.relpath(reference_file, basedir)
@@ -95,7 +93,7 @@ def extract_string_list(
 
             file_extension = os.path.splitext(l10n_file_name)[1]
             try:
-                file_parser = parser.getParser(file_extension)  # type: ignore[assignment]
+                file_parser = parser.getParser(file_extension)
                 file_parser.readFile(l10n_file_name)
                 entities = file_parser.parse()
                 for entity in entities:

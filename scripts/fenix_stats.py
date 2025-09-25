@@ -85,13 +85,11 @@ def extract_string_list(source_path: str, version: str) -> tuple[StringList, lis
         if not os.path.exists(toml_path):
             sys.exit(f"Missing config file {os.path.relpath(toml_path, source_path)}.")
 
-        project_config_paths: L10nConfigPaths = L10nConfigPaths(
+        project_config_paths = L10nConfigPaths(
             toml_path, locale_map={"android_locale": get_android_locale}
         )
-        basedir: str = project_config_paths.base
-        reference_files: list[str] = [
-            ref_path for ref_path in project_config_paths.ref_paths
-        ]
+        basedir = project_config_paths.base
+        reference_files = [ref_path for ref_path in project_config_paths.ref_paths]
 
         for reference_file in reference_files:
             key = f"{product}:{os.path.relpath(reference_file, basedir)}"
