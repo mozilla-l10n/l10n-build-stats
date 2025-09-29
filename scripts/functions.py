@@ -10,6 +10,10 @@ from typing import (
     Pattern,
 )
 
+from moz.l10n.formats import UnsupportedFormat
+from moz.l10n.model import Entry
+from moz.l10n.resource import parse_resource
+
 
 StringList = dict[str, dict[str, list[str]]]
 
@@ -155,3 +159,44 @@ def get_version_from_filename(filename: str) -> tuple[str, str]:
     major_version: str = version.split(".")[0]
 
     return version, major_version
+
+
+def parse_file(
+    file_path: str, rel_file: str, locale: str, string_list: StringList
+) -> None:
+    if rel_file not in string_list:
+        string_list[rel_file] = {}
+    if locale not in string_list[rel_file]:
+        string_list[rel_file][locale] = []
+
+    try:
+        resource = parse_resource(file_path)
+        for section in resource.sections:
+            for entry in section.entries:
+                if not isinstance(entry, Entry):
+                    continue
+
+                entry_id = ".".join(section.id + entry.id)
+                if locale == "source" or entry_id in string_list[rel_file]["source"]:
+                    string_list[rel_file][locale].append(entry_id)
+
+                """
+                This step is not strictly necessary: we could just look at
+                the message since Pontoon will prevent from saving a
+                translation with missing attributes. Just an additional check
+                in case something went wrong (manual edits, migrations).
+                """
+                if entry.properties:
+                    for attribute in entry.properties:
+                        attr_id = f"{entry_id}.{attribute}"
+                        if (
+                            locale == "source"
+                            or attr_id in string_list[rel_file]["source"]
+                        ):
+                            string_list[rel_file][locale].append(attr_id)
+    except UnsupportedFormat:
+        if locale == "source":
+            print(f"Unsupported format: {rel_file}")
+    except Exception as e:
+        print(f"Error parsing file: {rel_file}")
+        print(e)
