@@ -162,8 +162,31 @@ def get_version_from_filename(filename: str) -> tuple[str, str]:
 
 
 def parse_file(
-    file_path: str, rel_file: str, locale: str, string_list: StringList
+    file_path: str,
+    rel_file: str,
+    locale: str,
+    string_list: StringList,
+    version: str = "",
 ) -> None:
+    def store(id: str) -> None:
+        string_list[rel_file][locale].append(id)
+
+    def meta_include(entry: Entry) -> bool:
+        if entry.meta is None:
+            return True
+
+        removed_in = entry.get_meta("{http://mozac.org/tools}removedIn")
+        removed = removed_in and int(removed_in) < int(version.split(".")[0])
+        if removed:
+            print(f"Ignoring {entry_id} because removed in version {removed_in}")
+
+        tools_ignore = entry.get_meta("{http://schemas.android.com/tools}ignore")
+        unused = "UnusedResources" in str(tools_ignore).split(",")
+        if unused and not removed:
+            print(f"Ignoring {entry_id} because marked as UnusedResources")
+
+        return not (unused or removed)
+
     if rel_file not in string_list:
         string_list[rel_file] = {}
     if locale not in string_list[rel_file]:
@@ -177,8 +200,11 @@ def parse_file(
                     continue
 
                 entry_id = ".".join(section.id + entry.id)
-                if locale == "source" or entry_id in string_list[rel_file]["source"]:
-                    string_list[rel_file][locale].append(entry_id)
+                if locale == "source":
+                    if meta_include(entry):
+                        store(entry_id)
+                elif entry_id in string_list[rel_file]["source"]:
+                    store(entry_id)
 
                 """
                 This step is not strictly necessary: we could just look at
@@ -193,7 +219,7 @@ def parse_file(
                             locale == "source"
                             or attr_id in string_list[rel_file]["source"]
                         ):
-                            string_list[rel_file][locale].append(attr_id)
+                            store(attr_id)
     except UnsupportedFormat:
         if locale == "source":
             print(f"Unsupported format: {rel_file}")
