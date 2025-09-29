@@ -10,6 +10,10 @@ from typing import (
     Pattern,
 )
 
+from moz.l10n.formats import UnsupportedFormat
+from moz.l10n.model import Entry
+from moz.l10n.resource import parse_resource
+
 
 StringList = dict[str, dict[str, list[str]]]
 
@@ -155,3 +159,70 @@ def get_version_from_filename(filename: str) -> tuple[str, str]:
     major_version: str = version.split(".")[0]
 
     return version, major_version
+
+
+def parse_file(
+    file_path: str,
+    rel_file: str,
+    locale: str,
+    string_list: StringList,
+    version: str = "",
+) -> None:
+    def store(id: str) -> None:
+        string_list[rel_file][locale].append(id)
+
+    def meta_include(entry: Entry) -> bool:
+        if entry.meta is None:
+            return True
+
+        removed_in = entry.get_meta("{http://mozac.org/tools}removedIn")
+        removed = removed_in and int(removed_in) < int(version.split(".")[0])
+        if removed:
+            print(f"Ignoring {entry_id} because removed in version {removed_in}")
+
+        tools_ignore = entry.get_meta("{http://schemas.android.com/tools}ignore")
+        unused = "UnusedResources" in str(tools_ignore).split(",")
+        if unused and not removed:
+            print(f"Ignoring {entry_id} because marked as UnusedResources")
+
+        return not (unused or removed)
+
+    if rel_file not in string_list:
+        string_list[rel_file] = {}
+    if locale not in string_list[rel_file]:
+        string_list[rel_file][locale] = []
+
+    try:
+        resource = parse_resource(file_path)
+        for section in resource.sections:
+            for entry in section.entries:
+                if not isinstance(entry, Entry):
+                    continue
+
+                entry_id = ".".join(section.id + entry.id)
+                if locale == "source":
+                    if meta_include(entry):
+                        store(entry_id)
+                elif entry_id in string_list[rel_file]["source"]:
+                    store(entry_id)
+
+                """
+                This step is not strictly necessary: we could just look at
+                the message since Pontoon will prevent from saving a
+                translation with missing attributes. Just an additional check
+                in case something went wrong (manual edits, migrations).
+                """
+                if entry.properties:
+                    for attribute in entry.properties:
+                        attr_id = f"{entry_id}.{attribute}"
+                        if (
+                            locale == "source"
+                            or attr_id in string_list[rel_file]["source"]
+                        ):
+                            store(attr_id)
+    except UnsupportedFormat:
+        if locale == "source":
+            print(f"Unsupported format: {rel_file}")
+    except Exception as e:
+        print(f"Error parsing file: {rel_file}")
+        print(e)

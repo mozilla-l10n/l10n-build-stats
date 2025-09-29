@@ -15,60 +15,16 @@ from __future__ import annotations
 import argparse
 import os
 import sys
-import xml.etree.ElementTree as ET
 
 from functions import (
     StringList,
     get_firefox_releases,
+    parse_file,
     read_config,
     store_completion,
     update_git_repository,
 )
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
-
-
-def parse_XML_file(
-    file_path: str, source: bool = False, version: str = ""
-) -> list[str]:
-    """
-    Parse the strings.xml file and return a list of string IDs.
-
-    If it's the source locale, exclude strings with
-    tools:ignore="UnusedResources", and strings where moz:removedIn is set
-    to a version smaller than the version being checked.
-    """
-    string_ids: list[str] = []
-
-    try:
-        tree = ET.parse(file_path)
-        root = tree.getroot()
-        for string in root.findall("string"):
-            string_id = string.attrib["name"]
-            if source:
-                tools_ignore = string.attrib.get(
-                    "{http://schemas.android.com/tools}ignore", ""
-                )
-
-                removed_in = string.attrib.get(
-                    "{http://mozac.org/tools}removedIn", None
-                )
-                removed = False
-                if removed_in and int(removed_in) < int(version.split(".")[0]):
-                    print(
-                        f"Ignoring {string_id} because removed in version {removed_in}"
-                    )
-                    removed = True
-
-                if "UnusedResources" not in tools_ignore.split(",") and not removed:
-                    string_ids.append(string_id)
-            else:
-                string_ids.append(string_id)
-    except ET.ParseError as e:
-        print(f"Error parsing XML file: {e}")
-    except Exception as e:
-        print(f"Unexpected error: {e}")
-
-    return string_ids
 
 
 def extract_string_list(source_path: str, version: str) -> tuple[StringList, list[str]]:
@@ -94,9 +50,7 @@ def extract_string_list(source_path: str, version: str) -> tuple[StringList, lis
 
         for reference_file in reference_files:
             key = f"{product}:{os.path.relpath(reference_file, basedir)}"
-            string_list[key] = {
-                "source": parse_XML_file(reference_file, source=True, version=version),
-            }
+            parse_file(reference_file, key, "source", string_list, version)
 
         locales = list(project_config_paths.all_locales)
         locales.sort()
@@ -128,12 +82,7 @@ def extract_string_list(source_path: str, version: str) -> tuple[StringList, lis
                         f"Extra file {os.path.relpath(l10n_file, basedir)} in {locale}"
                     )
                     continue
-                # Remove extra strings not available in source
-                string_list[key][locale] = [
-                    id
-                    for id in parse_XML_file(l10n_file)
-                    if id in string_list[key]["source"]
-                ]
+                parse_file(l10n_file, key, locale, string_list, version)
 
     return string_list, locales
 
