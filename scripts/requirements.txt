@@ -1,2 +1,2 @@
 gspread ~= 6.2.1
-moz-l10n[xml]~=0.9.1
+moz-l10n[xml]~=0.10.0
