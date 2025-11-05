@@ -33,7 +33,7 @@ LocaleNameMap = Dict[str, str]
 
 
 def get_locale_names() -> LocaleNameMap:
-    url: str | None = "https://pontoon.mozilla.org/api/v2/locales"
+    url: str | None = "https://pontoon.mozilla.org/api/v2/locales/?fields=code,name"
     page = 1
     locale_names: LocaleNameMap = {}
     try:
