@@ -43,11 +43,14 @@ fi
 setupVirtualEnv
 source $root_path/.venv/bin/activate || exit 1
 
-python scripts/fenix_stats.py --version $VERSION
+python scripts/fenix_stats.py --version $VERSION || exit 1
 python scripts/csv_extract_product.py --product fenix
 
-python scripts/firefox_stats.py --version $VERSION
+python scripts/firefox_stats.py --version $VERSION || exit 1
 python scripts/csv_extract_product.py --product firefox
 
 # Generate JSON for chart
-python scripts/build_chart_json.py --version $VERSION
+python scripts/build_chart_json.py --version $VERSION || exit 1
+
+# Export data to Google Sheets
+python scripts/export_to_gsheet.py
