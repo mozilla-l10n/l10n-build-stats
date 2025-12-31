@@ -39,7 +39,7 @@ def extract_string_list(
     locales_path: str = os.path.join(
         source_path, "browser", "locales", "shipped-locales"
     )
-    with open(locales_path, "r") as f:
+    with open(locales_path) as f:
         locales: list[str] = f.read().splitlines()
     locales.remove("en-US")
     locales.sort()
@@ -77,7 +77,7 @@ def get_l10n_repo_changeset(source_path: str) -> str:
     l10n_changesets: str = os.path.join(
         source_path, "browser", "locales", "l10n-changesets.json"
     )
-    with open(l10n_changesets, "r") as f:
+    with open(l10n_changesets) as f:
         data: dict[str, dict[str, str]] = json.load(f)
         return data["it"]["revision"]
 

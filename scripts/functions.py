@@ -5,10 +5,9 @@ import subprocess
 import sys
 
 from typing import (
-    Match,
     Optional,
-    Pattern,
 )
+from re import Match, Pattern
 
 from moz.l10n.formats import UnsupportedFormat
 from moz.l10n.model import Entry
@@ -29,7 +28,7 @@ def read_config(params: list[str]) -> list[str]:
 
     # Read all available paths in the config file
     paths: dict[str, str] = {}
-    with open(config_file, "r") as cfg_file:
+    with open(config_file) as cfg_file:
         for line in cfg_file:
             line = line.strip()
             # Ignore comments and empty lines
@@ -40,7 +39,7 @@ def read_config(params: list[str]) -> list[str]:
     results: list[str] = []
     for param in params:
         if param not in paths:
-            sys.exit("{} is not defined in the config file".format(param))
+            sys.exit(f"{param} is not defined in the config file")
         else:
             if not os.path.exists(paths[param]):
                 sys.exit(
@@ -88,8 +87,7 @@ def get_firefox_releases(repo_path: str) -> dict[str, str]:
         print("Extracting tags from repository")
         result = subprocess.run(
             ["git", "-C", repo_path, "tag", "-l", "FIREFOX_*"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
         )
         if result.returncode != 0:
@@ -105,7 +103,7 @@ def get_firefox_releases(repo_path: str) -> dict[str, str]:
         # Process the filtered lines to extract version
         releases: dict[str, str] = {}
         for line in filtered_lines:
-            match: Optional[Match[str]] = tag_re.search(line)
+            match: Match[str] | None = tag_re.search(line)
             if match:
                 tag_name: str = match.group(1)
                 version: str = match.group(2).replace("_", ".")
@@ -126,8 +124,7 @@ def update_git_repository(changeset: str, repo_path: str) -> None:
         print(f"Updating git repository to changeset: {changeset}")
         result = subprocess.run(
             ["git", "-C", repo_path, "checkout", changeset],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
         )
         if result.returncode != 0:
@@ -153,7 +150,7 @@ def get_json_files(product: str) -> list[str]:
 
 def get_version_from_filename(filename: str) -> tuple[str, str]:
     version_re = re.compile(r"_([\d_]*)")
-    match: Optional[Match[str]] = version_re.search(filename)
+    match: Match[str] | None = version_re.search(filename)
     assert match is not None
     version: str = match.group(1).replace("_", ".")
     major_version: str = version.split(".")[0]

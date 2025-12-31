@@ -28,8 +28,8 @@ class LocaleRecord(TypedDict, total=False):
     firefox: dict[int, float | int]
 
 
-CompletionData = Dict[str, LocaleRecord]
-LocaleNameMap = Dict[str, str]
+CompletionData = dict[str, LocaleRecord]
+LocaleNameMap = dict[str, str]
 
 
 def get_locale_names() -> LocaleNameMap:
@@ -82,7 +82,7 @@ def main() -> None:
             _, major_version = get_version_from_filename(json_file)
             if major_version not in versions:
                 continue
-            with open(os.path.join(stats_path, json_file), "r") as f:
+            with open(os.path.join(stats_path, json_file)) as f:
                 version_data: dict[str, float | int] = json.load(f)
                 for locale, percentage in version_data.items():
                     if locale not in completion_data:

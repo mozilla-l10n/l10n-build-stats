@@ -11,7 +11,8 @@ import configparser
 import csv
 import os
 
-from typing import Any, Mapping, Optional, TypedDict
+from typing import Any, Optional, TypedDict
+from collections.abc import Mapping
 
 import gspread
 
@@ -44,7 +45,7 @@ def read_config(root_path: str) -> dict[str, str]:
 
 
 def read_csv(csv_path: str) -> list[list[str]]:
-    with open(csv_path, "r", encoding="utf-8") as f:
+    with open(csv_path, encoding="utf-8") as f:
         reader = csv.reader(f)
         data: list[list[str]] = [row for row in reader]
     # Guarantee at least a 1x1 range for empty files
@@ -120,7 +121,7 @@ def main() -> None:
         # Discover existing named ranges to get the ID (if present)
         meta: Mapping[str, Any] = sh.fetch_sheet_metadata()
         named_ranges: list[Mapping[str, Any]] = meta.get("namedRanges", []) or []
-        target: Optional[Mapping[str, Any]] = next(
+        target: Mapping[str, Any] | None = next(
             (nr for nr in named_ranges if nr.get("name") == target_name), None
         )
 

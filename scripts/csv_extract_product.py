@@ -47,7 +47,7 @@ def main() -> None:
     raw_build_data: dict[str, BuildEntry] = {}
     locales: list[str] = []
     for json_file in json_files:
-        with open(os.path.join(stats_path, json_file), "r") as f:
+        with open(os.path.join(stats_path, json_file)) as f:
             data: dict[str, float | int] = json.load(f)
             version, major_version = get_version_from_filename(json_file)
             for locale, percentage in data.items():
