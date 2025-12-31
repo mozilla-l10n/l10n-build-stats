@@ -4,9 +4,6 @@ import re
 import subprocess
 import sys
 
-from typing import (
-    Optional,
-)
 from re import Match, Pattern
 
 from moz.l10n.formats import UnsupportedFormat

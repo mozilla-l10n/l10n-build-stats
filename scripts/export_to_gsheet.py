@@ -11,8 +11,8 @@ import configparser
 import csv
 import os
 
-from typing import Any, Optional, TypedDict
 from collections.abc import Mapping
+from typing import Any, TypedDict
 
 import gspread
 

@@ -15,7 +15,7 @@ import json
 import os
 import sys
 
-from typing import Any, Dict, TypedDict
+from typing import Any, TypedDict
 
 import requests
 
