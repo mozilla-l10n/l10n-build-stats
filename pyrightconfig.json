@@ -1,0 +1,17 @@
+{
+  "include": ["scripts"],
+  "extraPaths": ["scripts"],
+  "exclude": [
+    "**/__pycache__",
+    ".venv"
+  ],
+  "venvPath": ".",
+  "venv": ".venv",
+  "pythonVersion": "3.11",
+  "pythonPlatform": "Darwin",
+  "typeCheckingMode": "basic",
+  "useLibraryCodeForTypes": true,
+  "reportMissingImports": "error",
+  "reportMissingTypeStubs": "none",
+  "reportAttributeAccessIssue": "warning"
+}

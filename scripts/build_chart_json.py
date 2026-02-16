@@ -11,15 +11,20 @@ Build JSON file for charting completion statistics over time
 from __future__ import annotations
 
 import argparse
+import asyncio
 import json
 import os
 import sys
 
 from typing import Any, TypedDict
 
-import requests
+import aiohttp
 
 from functions import get_json_files, get_stats_path, get_version_from_filename
+from logging_config import get_logger, setup_logging
+
+
+logger = get_logger(__name__)
 
 
 class LocaleRecord(TypedDict, total=False):
@@ -32,44 +37,52 @@ CompletionData = dict[str, LocaleRecord]
 LocaleNameMap = dict[str, str]
 
 
-def get_locale_names() -> LocaleNameMap:
+async def get_locale_names() -> LocaleNameMap:
+    """
+    Fetch locale names from Pontoon API asynchronously.
+
+    Returns:
+        Dictionary mapping locale codes to display names
+
+    Raises:
+        SystemExit: If API requests fail
+    """
     url: str | None = "https://pontoon.mozilla.org/api/v2/locales/?fields=code,name"
     page = 1
     locale_names: LocaleNameMap = {}
+
     try:
-        while url:
-            print(f"Reading locales (page {page})")
-            response = requests.get(url)
-            response.raise_for_status()
-            data: dict[str, Any] = response.json()
-            for locale in data.get("results", {}):
-                locale_names[locale["code"]] = locale["name"]
-            # Get the next page URL
-            url = data.get("next")
-            page += 1
+        async with aiohttp.ClientSession() as session:
+            while url:
+                logger.info(f"Reading locales (page {page})")
+                async with session.get(url) as response:
+                    response.raise_for_status()
+                    data: dict[str, Any] = await response.json()
+                    for locale in data.get("results", {}):
+                        locale_names[locale["code"]] = locale["name"]
+                    # Get the next page URL
+                    url = data.get("next")
+                    page += 1
 
         return locale_names
-    except requests.RequestException as e:
-        print(f"Error fetching data: {e}")
-        sys.exit()
+    except aiohttp.ClientError as e:
+        logger.error(f"Error fetching data: {e}")
+        sys.exit(1)
 
 
-def main() -> None:
-    cl_parser = argparse.ArgumentParser()
-    cl_parser.add_argument(
-        "--version",
-        required=True,
-        dest="version",
-        help="Current version",
-    )
-    args = cl_parser.parse_args()
+async def async_main(version: str) -> None:
+    """
+    Async main function for building chart data.
 
+    Args:
+        version: Current version to use for filtering
+    """
     # Get locale names from Pontoon
-    locale_names = get_locale_names()
+    locale_names = await get_locale_names()
 
     # Only extract data for the last X versions
     max_versions = 30
-    version_int = int(args.version.split(".")[0])
+    version_int = int(version.split(".")[0])
     versions = [str(v) for v in range(version_int, version_int - max_versions, -1)]
 
     stats_path = get_stats_path()
@@ -98,6 +111,22 @@ def main() -> None:
     )
     with open(output_file, "w") as f:
         json.dump(completion_data, f)
+
+
+def main() -> None:
+    """Main entry point for building chart JSON."""
+    setup_logging()
+
+    cl_parser = argparse.ArgumentParser()
+    cl_parser.add_argument(
+        "--version",
+        required=True,
+        dest="version",
+        help="Current version",
+    )
+    args = cl_parser.parse_args()
+
+    asyncio.run(async_main(args.version))
 
 
 if __name__ == "__main__":

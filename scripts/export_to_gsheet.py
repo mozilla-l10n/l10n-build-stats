@@ -17,6 +17,10 @@ from typing import Any, TypedDict
 import gspread
 
 from gspread.utils import ValueInputOption
+from logging_config import get_logger, setup_logging
+
+
+logger = get_logger(__name__)
 
 
 class ServiceAccountDict(TypedDict):
@@ -63,6 +67,8 @@ def a1_from_rc(row: int, col: int) -> str:
 
 
 def main() -> None:
+    setup_logging()
+
     root_path = os.path.join(
         os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
     )
@@ -153,8 +159,8 @@ def main() -> None:
 
         sh.batch_update({"requests": requests})
 
-        print(f"Uploaded {rows} rows x {cols} cols to sheet '{target_name}'.")
-        print(f"Named range '{target_name}' now refers to A1:{end_a1}.")
+        logger.info(f"Uploaded {rows} rows x {cols} cols to sheet '{target_name}'.")
+        logger.info(f"Named range '{target_name}' now refers to A1:{end_a1}.")
 
 
 if __name__ == "__main__":

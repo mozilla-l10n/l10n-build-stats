@@ -2,51 +2,19 @@ import json
 import os
 import re
 import subprocess
-import sys
 
 from re import Match, Pattern
 
+from logging_config import get_logger
 from moz.l10n.formats import UnsupportedFormat
 from moz.l10n.model import Entry
 from moz.l10n.resource import parse_resource
 
 
+logger = get_logger(__name__)
+
+
 StringList = dict[str, dict[str, list[str]]]
-
-
-def read_config(params: list[str]) -> list[str]:
-    # Get absolute path of the repository's root from the script location
-    root_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-    config_file = os.path.join(root_folder, "config", "config")
-
-    # Abort if config file is missing
-    if not os.path.exists(config_file):
-        sys.exit("ERROR: config file is missing")
-
-    # Read all available paths in the config file
-    paths: dict[str, str] = {}
-    with open(config_file) as cfg_file:
-        for line in cfg_file:
-            line = line.strip()
-            # Ignore comments and empty lines
-            if line == "" or line.startswith("#"):
-                continue
-            paths[line.split("=")[0]] = line.split("=")[1].strip('"')
-
-    results: list[str] = []
-    for param in params:
-        if param not in paths:
-            sys.exit(f"{param} is not defined in the config file")
-        else:
-            if not os.path.exists(paths[param]):
-                sys.exit(
-                    "Path defined for {} ({}) does not exist".format(
-                        param, paths[param]
-                    )
-                )
-        results.append(paths[param])
-
-    return results
 
 
 def store_completion(
@@ -55,6 +23,19 @@ def store_completion(
     locales: list[str],
     product: str,
 ) -> None:
+    """
+    Calculate and store localization completion statistics to a JSON file.
+
+    Args:
+        string_list: Nested dict mapping file -> locale -> string IDs
+        version: Product version (e.g., "147.0")
+        locales: List of locale codes to process
+        product: Product name ("firefox" or "fenix")
+
+    Raises:
+        ZeroDivisionError: If source has no strings (shouldn't happen)
+        OSError: If output file can't be written
+    """
     completion: dict[str, float] = {}
     stats_path = get_stats_path()
     source_stats: int = sum(
@@ -70,7 +51,7 @@ def store_completion(
         completion[locale] = round((locale_stats / source_stats), 4)
 
     for locale, percentage in completion.items():
-        print(f"{locale}: {round(percentage * 100, 2)}%")
+        logger.info(f"{locale}: {round(percentage * 100, 2)}%")
 
     output_file: str = os.path.join(
         stats_path, f"{product}_{version.replace('.', '_')}.json"
@@ -80,59 +61,87 @@ def store_completion(
 
 
 def get_firefox_releases(repo_path: str) -> dict[str, str]:
-    try:
-        print("Extracting tags from repository")
-        result = subprocess.run(
-            ["git", "-C", repo_path, "tag", "-l", "FIREFOX_*"],
-            capture_output=True,
-            text=True,
-        )
-        if result.returncode != 0:
-            raise RuntimeError(f"Error running git tag: {result.stderr}")
+    """
+    Extract Firefox release tags from a git repository.
 
-        # Filter output using regex
-        output: str = result.stdout
-        tag_re: Pattern[str] = re.compile(r"(FIREFOX_([0-9_]*)_RELEASE)")
-        filtered_lines: list[str] = [
-            line for line in output.splitlines() if tag_re.search(line)
-        ]
+    Args:
+        repo_path: Path to the git repository
 
-        # Process the filtered lines to extract version
-        releases: dict[str, str] = {}
-        for line in filtered_lines:
-            match: Match[str] | None = tag_re.search(line)
-            if match:
-                tag_name: str = match.group(1)
-                version: str = match.group(2).replace("_", ".")
-                releases[version] = tag_name
+    Returns:
+        Dictionary mapping version strings to git tag names
 
-        return releases
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return {}
+    Raises:
+        RuntimeError: If git command fails
+    """
+    logger.info("Extracting tags from repository")
+    result = subprocess.run(
+        ["git", "-C", repo_path, "tag", "-l", "FIREFOX_*"],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"Error running git tag: {result.stderr}")
+
+    # Filter output using regex
+    output: str = result.stdout
+    tag_re: Pattern[str] = re.compile(r"(FIREFOX_([0-9_]*)_RELEASE)")
+    filtered_lines: list[str] = [
+        line for line in output.splitlines() if tag_re.search(line)
+    ]
+
+    # Process the filtered lines to extract version
+    releases: dict[str, str] = {}
+    for line in filtered_lines:
+        match: Match[str] | None = tag_re.search(line)
+        if match:
+            tag_name: str = match.group(1)
+            version: str = match.group(2).replace("_", ".")
+            releases[version] = tag_name
+
+    return releases
 
 
 def get_stats_path() -> str:
+    """
+    Get the absolute path to the stats directory.
+
+    Returns:
+        Absolute path to the stats directory
+    """
     return os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, "stats"))
 
 
 def update_git_repository(changeset: str, repo_path: str) -> None:
-    try:
-        print(f"Updating git repository to changeset: {changeset}")
-        result = subprocess.run(
-            ["git", "-C", repo_path, "checkout", changeset],
-            capture_output=True,
-            text=True,
-        )
-        if result.returncode != 0:
-            print(f"Error git updating repository to {changeset}: {result.stderr}")
-            return None
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+    """
+    Update git repository to a specific changeset.
+
+    Args:
+        changeset: Git changeset/tag/branch to checkout
+        repo_path: Path to the git repository
+
+    Raises:
+        RuntimeError: If git checkout fails
+    """
+    logger.info(f"Updating git repository to changeset: {changeset}")
+    result = subprocess.run(
+        ["git", "-C", repo_path, "checkout", changeset],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        raise RuntimeError(f"Error updating repository to {changeset}: {result.stderr}")
 
 
 def get_json_files(product: str) -> list[str]:
+    """
+    List all JSON statistics files for a given product.
+
+    Args:
+        product: Product name ("firefox" or "fenix")
+
+    Returns:
+        Sorted list of JSON filenames for the product
+    """
     # List all JSON files starting with the product name
     stats_path = get_stats_path()
     json_files = [
@@ -146,6 +155,15 @@ def get_json_files(product: str) -> list[str]:
 
 
 def get_version_from_filename(filename: str) -> tuple[str, str]:
+    """
+    Extract version information from a statistics filename.
+
+    Args:
+        filename: Filename like "firefox_147_0.json"
+
+    Returns:
+        Tuple of (full_version, major_version) e.g., ("147.0", "147")
+    """
     version_re = re.compile(r"_([\d_]*)")
     match: Match[str] | None = version_re.search(filename)
     assert match is not None
@@ -162,6 +180,20 @@ def parse_file(
     string_list: StringList,
     version: str = "",
 ) -> None:
+    """
+    Parse a localization file and extract string IDs.
+
+    Args:
+        file_path: Absolute path to the file to parse
+        rel_file: Relative file path (used as dict key)
+        locale: Locale code ("source" for reference files)
+        string_list: Dict to update with parsed string IDs
+        version: Product version (for Android removedIn meta check)
+
+    Side effects:
+        Updates string_list dict with parsed string IDs
+    """
+
     def store(id: str) -> None:
         string_list[rel_file][locale].append(id)
 
@@ -172,12 +204,12 @@ def parse_file(
         removed_in = entry.get_meta("{http://mozac.org/tools}removedIn")
         removed = removed_in and int(removed_in) < int(version.split(".")[0])
         if removed:
-            print(f"Ignoring {entry_id} because removed in version {removed_in}")
+            logger.debug(f"Ignoring {entry_id} because removed in version {removed_in}")
 
         tools_ignore = entry.get_meta("{http://schemas.android.com/tools}ignore")
         unused = "UnusedResources" in str(tools_ignore).split(",")
         if unused and not removed:
-            print(f"Ignoring {entry_id} because marked as UnusedResources")
+            logger.debug(f"Ignoring {entry_id} because marked as UnusedResources")
 
         return not (unused or removed)
 
@@ -216,7 +248,7 @@ def parse_file(
                             store(attr_id)
     except UnsupportedFormat:
         if locale == "source":
-            print(f"Unsupported format: {rel_file}")
+            logger.warning(f"Unsupported format: {rel_file}")
     except Exception as e:
-        print(f"Error parsing file: {rel_file}")
-        print(e)
+        logger.error(f"Error parsing file: {rel_file}")
+        logger.error(e)

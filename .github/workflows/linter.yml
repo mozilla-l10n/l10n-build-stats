@@ -13,7 +13,7 @@ jobs:
   linter:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Install Python
         uses: actions/setup-python@v6
         with:
@@ -24,7 +24,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: |
             **/scripts/*.txt
-          version: "0.9.2"
+          version: "0.10.2"
       - name: Install Dependencies
         run: uv pip install -r scripts/requirements.txt -r scripts/requirements-dev.txt
         env:
@@ -35,3 +35,10 @@ jobs:
         run: ruff format scripts --check
       - name: pyright
         run: pyright scripts
+      - name: Run tests
+        run: pytest tests/ --cov=scripts --cov-report=term --cov-report=xml
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
