@@ -5,7 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Localization Build Stats</title>
   <meta name="description" content="Completion levels for Firefox products by locale." />
-  <link rel="stylesheet" href="css/style.css?v=20250926" />
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Firefox Localization Build Stats" />
+  <meta property="og:description" content="Track translation completeness across Firefox Desktop and Firefox for Android" />
+  <meta property="og:url" content="https://mozilla-l10n.github.io/l10n-build-stats/" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>📊</text></svg>" />
+
+  <link rel="stylesheet" href="css/style.css?v=20250216" />
 </head>
 <body>
   <div class="container">
@@ -15,29 +25,72 @@
         <h1 class="title">Completion levels per locale</h1>
         <p class="sub">A quick look at translation completeness across Firefox Desktop and Firefox for Android. The chart shows the last 30 releases for the selected locale.</p>
       </div>
-      <a href="https://github.com/mozilla-l10n/l10n-build-stats" target="_blank" rel="noopener">View repository ↗</a>
+      <div class="intro-actions">
+        <button id="exportBtn" class="btn-small" title="Download chart as image">💾 Export chart</button>
+        <a href="https://github.com/mozilla-l10n/l10n-build-stats" target="_blank" rel="noopener">View repository ↗</a>
+        <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Toggle dark mode">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
     </div>
 
     <div class="card" style="margin: 16px 0 18px;">
       <div class="controls">
         <div class="field">
-          <label for="localeSelect">Locale</label>
-          <select id="localeSelect" aria-label="Locale"></select>
+          <label for="localeSearch">Locale <span class="locale-count" id="localeCount"></span></label>
+          <div class="search-wrapper">
+            <input type="text" id="localeSearch" placeholder="Search locales..." aria-label="Search locales" />
+            <select id="localeSelect" aria-label="Locale" size="8" multiple></select>
+          </div>
+          <div class="compare-mode">
+            <label>
+              <input type="checkbox" id="compareMode" />
+              <span>Compare multiple locales (Ctrl/Cmd+Click to select)</span>
+            </label>
+          </div>
+          <div id="selectedLocales" class="selected-locales" style="display:none;"></div>
+          <button id="clearSelectionBtn" class="btn" style="display:none; margin-top: 12px;" title="Clear all selections">🗑️ Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="statsCard" style="display:none; margin-bottom: 18px;">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-label">Average</div>
+          <div class="stat-value" id="statAvg">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Minimum</div>
+          <div class="stat-value" id="statMin">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Maximum</div>
+          <div class="stat-value" id="statMax">—</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Latest</div>
+          <div class="stat-value" id="statLatest">—</div>
         </div>
       </div>
     </div>
 
     <div class="card">
       <div class="chart-wrap">
+        <div class="skeleton" id="skeleton"></div>
         <canvas id="chart" aria-label="Completion chart" role="img"></canvas>
       </div>
       <div class="loading" id="status" style="margin-top:12px;">Loading data…</div>
     </div>
 
-    <p class="footer">Locale is read from the URL (e.g. <code>?locale=it</code>) or your browser’s Accept-Language header.</p>
+    <p class="footer">
+      Locale is read from the URL (e.g. <code>?locale=it</code>) or your browser's Accept-Language header.
+      <span id="lastUpdated"></span>
+    </p>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.js" integrity="sha512-D4pL3vNgjkHR/qq+nZywuS6Hg1gwR+UzrdBW6Yg8l26revKyQHMgPq9CLJ2+HHalepS+NuGw1ayCCsGXu9JCXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="js/script.js?v=20250926"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js" integrity="sha512-wUYbRPLV5zs6IqvWd88HIqZU/b8TBx+I8LEioQ/UC0t5EMCLApqhIAnUg7EsAzdbhhdgW07TqYDdH3QEXRcPOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="js/script.js?v=20250216"></script>
 </body>
 </html>
