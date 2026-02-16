@@ -5,13 +5,13 @@ import subprocess
 
 from re import Match, Pattern
 
+from logging_config import get_logger
 from moz.l10n.formats import UnsupportedFormat
 from moz.l10n.model import Entry
 from moz.l10n.resource import parse_resource
 
 # Import read_config from new config module for backwards compatibility
 from config import read_config  # noqa: F401
-from logging_config import get_logger
 
 
 logger = get_logger(__name__)
@@ -132,9 +132,7 @@ def update_git_repository(changeset: str, repo_path: str) -> None:
         text=True,
     )
     if result.returncode != 0:
-        raise RuntimeError(
-            f"Error updating repository to {changeset}: {result.stderr}"
-        )
+        raise RuntimeError(f"Error updating repository to {changeset}: {result.stderr}")
 
 
 def get_json_files(product: str) -> list[str]:
@@ -198,6 +196,7 @@ def parse_file(
     Side effects:
         Updates string_list dict with parsed string IDs
     """
+
     def store(id: str) -> None:
         string_list[rel_file][locale].append(id)
 

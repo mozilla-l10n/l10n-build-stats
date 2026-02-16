@@ -6,6 +6,7 @@ import os
 import sys
 
 from pathlib import Path
+
 from logging_config import get_logger
 
 
@@ -67,7 +68,7 @@ class Config:
 
                 key, _, value = line.partition("=")
                 key = key.strip()
-                value = value.strip().strip('"\'')
+                value = value.strip().strip("\"'")
 
                 if not key:
                     raise ConfigError(f"Invalid config line {line_num}: empty key")

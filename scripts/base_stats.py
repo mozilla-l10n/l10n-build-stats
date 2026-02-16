@@ -7,14 +7,14 @@ import sys
 
 from abc import ABC, abstractmethod
 
-from config import read_config
 from functions import (
     StringList,
     get_firefox_releases,
     store_completion,
-    update_git_repository,
 )
 from logging_config import get_logger, setup_logging
+
+from config import read_config
 
 
 logger = get_logger(__name__)
@@ -107,11 +107,15 @@ class StatsExtractor(ABC):
             self.setup_repositories(firefox_releases, *config_paths)
 
             # Extract statistics
-            logger.info(f"Extracting statistics for {self.get_product_name()} {self.version}")
+            logger.info(
+                f"Extracting statistics for {self.get_product_name()} {self.version}"
+            )
             string_list, locales = self.extract_string_list(*config_paths)
 
             # Store completion levels
-            store_completion(string_list, self.version, locales, self.get_product_name())
+            store_completion(
+                string_list, self.version, locales, self.get_product_name()
+            )
             logger.info("Statistics extraction completed successfully")
 
         except RuntimeError as e:

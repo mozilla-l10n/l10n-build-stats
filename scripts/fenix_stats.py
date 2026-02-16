@@ -56,7 +56,9 @@ class FenixStatsExtractor(StatsExtractor):
         source_path = paths[0]
 
         toml_paths: dict[str, str] = {
-            "fenix": os.path.join(source_path, "mobile", "android", "fenix", "l10n.toml"),
+            "fenix": os.path.join(
+                source_path, "mobile", "android", "fenix", "l10n.toml"
+            ),
             "android-components": os.path.join(
                 source_path, "mobile", "android", "android-components", "l10n.toml"
             ),
@@ -68,7 +70,9 @@ class FenixStatsExtractor(StatsExtractor):
 
         for product, toml_path in toml_paths.items():
             if not os.path.exists(toml_path):
-                sys.exit(f"Missing config file {os.path.relpath(toml_path, source_path)}.")
+                sys.exit(
+                    f"Missing config file {os.path.relpath(toml_path, source_path)}."
+                )
 
             project_config_paths = L10nConfigPaths(
                 toml_path, locale_map={"android_locale": get_android_locale}

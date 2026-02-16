@@ -118,7 +118,9 @@ class FirefoxStatsExtractor(StatsExtractor):
 
                 parse_file(l10n_file_name, rel_file, locale, string_list)
             if missing_files:
-                logger.warning(f"Missing {len(missing_files)} files for locale {locale}:")
+                logger.warning(
+                    f"Missing {len(missing_files)} files for locale {locale}:"
+                )
                 for missing_file in missing_files:
                     logger.warning(f"  {missing_file}")
 
