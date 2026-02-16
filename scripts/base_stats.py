@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import logging
 import sys
 
 from abc import ABC, abstractmethod
@@ -15,9 +14,10 @@ from functions import (
     store_completion,
     update_git_repository,
 )
+from logging_config import get_logger, setup_logging
 
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class StatsExtractor(ABC):
@@ -128,10 +128,7 @@ class StatsExtractor(ABC):
 
         Parses command-line arguments and runs the extractor.
         """
-        logging.basicConfig(
-            level=logging.INFO,
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        )
+        setup_logging()
 
         parser = argparse.ArgumentParser(
             description=f"Extract localization statistics for {cls.__name__}"
@@ -142,7 +139,22 @@ class StatsExtractor(ABC):
             dest="version",
             help="Version to extract (e.g., '147.0')",
         )
+        parser.add_argument(
+            "--verbose",
+            "-v",
+            action="store_true",
+            help="Enable verbose logging with file/line numbers",
+        )
+        parser.add_argument(
+            "--log-file",
+            type=str,
+            help="Write logs to file in addition to console",
+        )
         args = parser.parse_args()
+
+        # Reconfigure with user options
+        if args.verbose or args.log_file:
+            setup_logging(verbose=args.verbose, log_file=args.log_file)
 
         extractor = cls(args.version)
         extractor.run()

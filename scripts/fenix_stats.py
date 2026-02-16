@@ -12,16 +12,16 @@ python fenix_stats.py --version 147.0
 
 from __future__ import annotations
 
-import logging
 import os
 import sys
 
 from base_stats import StatsExtractor
 from functions import StringList, parse_file, update_git_repository
+from logging_config import get_logger
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
 
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class FenixStatsExtractor(StatsExtractor):

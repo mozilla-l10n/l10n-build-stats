@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 import re
 import subprocess
@@ -12,9 +11,10 @@ from moz.l10n.resource import parse_resource
 
 # Import read_config from new config module for backwards compatibility
 from config import read_config  # noqa: F401
+from logging_config import get_logger
 
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 StringList = dict[str, dict[str, list[str]]]

@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import configparser
 import csv
-import logging
 import os
 
 from collections.abc import Mapping
@@ -18,13 +17,10 @@ from typing import Any, TypedDict
 import gspread
 
 from gspread.utils import ValueInputOption
+from logging_config import get_logger, setup_logging
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class ServiceAccountDict(TypedDict):
@@ -71,6 +67,8 @@ def a1_from_rc(row: int, col: int) -> str:
 
 
 def main() -> None:
+    setup_logging()
+
     root_path = os.path.join(
         os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
     )

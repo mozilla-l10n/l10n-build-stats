@@ -13,7 +13,6 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
-import logging
 import os
 import sys
 
@@ -22,13 +21,10 @@ from typing import Any, TypedDict
 import aiohttp
 
 from functions import get_json_files, get_stats_path, get_version_from_filename
+from logging_config import get_logger, setup_logging
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class LocaleRecord(TypedDict, total=False):
@@ -119,6 +115,8 @@ async def async_main(version: str) -> None:
 
 def main() -> None:
     """Main entry point for building chart JSON."""
+    setup_logging()
+
     cl_parser = argparse.ArgumentParser()
     cl_parser.add_argument(
         "--version",

@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-import logging
 import os
 import sys
 
 from pathlib import Path
+from logging_config import get_logger
 
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class ConfigError(Exception):
