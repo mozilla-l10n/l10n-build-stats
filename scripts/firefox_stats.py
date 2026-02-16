@@ -39,6 +39,19 @@ logger = logging.getLogger(__name__)
 def extract_string_list(
     source_path: str, l10n_path: str
 ) -> tuple[StringList, list[str]]:
+    """
+    Extract localization strings for Firefox Desktop.
+
+    Args:
+        source_path: Path to mozilla-firefox repository
+        l10n_path: Path to firefox-l10n repository
+
+    Returns:
+        Tuple of (string_list dict, list of locales)
+
+    Raises:
+        SystemExit: If required config files are missing
+    """
     toml_path: str = os.path.join(source_path, "browser", "locales", "l10n.toml")
     if not os.path.exists(toml_path):
         sys.exit(f"Missing config file {os.path.relpath(toml_path, source_path)}.")
@@ -82,6 +95,19 @@ def extract_string_list(
 
 
 def get_l10n_repo_changeset(source_path: str) -> str:
+    """
+    Get the l10n repository changeset from Firefox source.
+
+    Args:
+        source_path: Path to mozilla-firefox repository
+
+    Returns:
+        Git commit hash for the l10n repository
+
+    Raises:
+        FileNotFoundError: If l10n-changesets.json is missing
+        KeyError: If 'it' locale data is missing
+    """
     l10n_changesets: str = os.path.join(
         source_path, "browser", "locales", "l10n-changesets.json"
     )
@@ -91,6 +117,7 @@ def get_l10n_repo_changeset(source_path: str) -> str:
 
 
 def main() -> None:
+    """Main entry point for firefox stats extraction."""
     cl_parser = argparse.ArgumentParser()
     cl_parser.add_argument(
         "--version",
@@ -100,26 +127,36 @@ def main() -> None:
     )
     args = cl_parser.parse_args()
 
-    version: str = args.version
-    [source_path, l10n_path] = read_config(["mozilla_firefox_path", "l10n_path"])
+    try:
+        version: str = args.version
+        source_path, l10n_path = read_config(["mozilla_firefox_path", "l10n_path"])
 
-    # Get the release tags from mozilla-unified
-    firefox_releases = get_firefox_releases(source_path)
-    if version not in firefox_releases:
-        sys.exit(f"Version {version} not available as a release in repository tags")
+        # Get the release tags from mozilla-unified
+        firefox_releases = get_firefox_releases(source_path)
+        if version not in firefox_releases:
+            sys.exit(f"Version {version} not available as a release in repository tags")
 
-    # Update the source repository to the tag
-    update_git_repository(firefox_releases[version], source_path)
+        # Update the source repository to the tag
+        update_git_repository(firefox_releases[version], source_path)
 
-    # Get the version of the l10n repo
-    l10n_changeset: str = get_l10n_repo_changeset(source_path)
-    update_git_repository(l10n_changeset, l10n_path)
+        # Get the version of the l10n repo
+        l10n_changeset: str = get_l10n_repo_changeset(source_path)
+        update_git_repository(l10n_changeset, l10n_path)
 
-    # Extract list statistics
-    string_list, locales = extract_string_list(source_path, l10n_path)
+        # Extract list statistics
+        string_list, locales = extract_string_list(source_path, l10n_path)
 
-    # Store completion levels in CSV file
-    store_completion(string_list, version, locales, "firefox")
+        # Store completion levels in JSON file
+        store_completion(string_list, version, locales, "firefox")
+    except RuntimeError as e:
+        logger.error(f"Runtime error: {e}")
+        sys.exit(1)
+    except (FileNotFoundError, KeyError) as e:
+        logger.error(f"Configuration error: {e}")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}", exc_info=True)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

@@ -41,6 +41,15 @@ LocaleNameMap = dict[str, str]
 
 
 def get_locale_names() -> LocaleNameMap:
+    """
+    Fetch locale names from Pontoon API.
+
+    Returns:
+        Dictionary mapping locale codes to display names
+
+    Raises:
+        SystemExit: If API requests fail
+    """
     url: str | None = "https://pontoon.mozilla.org/api/v2/locales/?fields=code,name"
     page = 1
     locale_names: LocaleNameMap = {}

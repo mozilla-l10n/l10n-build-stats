@@ -36,6 +36,19 @@ logger = logging.getLogger(__name__)
 
 
 def extract_string_list(source_path: str, version: str) -> tuple[StringList, list[str]]:
+    """
+    Extract localization strings for Firefox for Android.
+
+    Args:
+        source_path: Path to mozilla-firefox repository
+        version: Version number to extract (e.g., "147.0")
+
+    Returns:
+        Tuple of (string_list dict, list of locales)
+
+    Raises:
+        SystemExit: If required TOML config files are missing
+    """
     toml_paths: dict[str, str] = {
         "fenix": os.path.join(source_path, "mobile", "android", "fenix", "l10n.toml"),
         "android-components": os.path.join(
@@ -96,6 +109,7 @@ def extract_string_list(source_path: str, version: str) -> tuple[StringList, lis
 
 
 def main() -> None:
+    """Main entry point for fenix stats extraction."""
     cl_parser = argparse.ArgumentParser()
     cl_parser.add_argument(
         "--version",
@@ -105,22 +119,29 @@ def main() -> None:
     )
     args = cl_parser.parse_args()
 
-    version: str = args.version
-    [source_path] = read_config(["mozilla_firefox_path"])
+    try:
+        version: str = args.version
+        (source_path,) = read_config(["mozilla_firefox_path"])
 
-    # Get the release tags from mozilla-unified
-    firefox_releases = get_firefox_releases(source_path)
-    if version not in firefox_releases:
-        sys.exit(f"Version {version} not available as a release in repository tags")
+        # Get the release tags from mozilla-unified
+        firefox_releases = get_firefox_releases(source_path)
+        if version not in firefox_releases:
+            sys.exit(f"Version {version} not available as a release in repository tags")
 
-    # Update the repository to the tag
-    update_git_repository(firefox_releases[version], source_path)
+        # Update the repository to the tag
+        update_git_repository(firefox_releases[version], source_path)
 
-    # Extract list statistics
-    string_list, locales = extract_string_list(source_path, version)
+        # Extract list statistics
+        string_list, locales = extract_string_list(source_path, version)
 
-    # Store completion levels in CSV file
-    store_completion(string_list, version, locales, "fenix")
+        # Store completion levels in JSON file
+        store_completion(string_list, version, locales, "fenix")
+    except RuntimeError as e:
+        logger.error(f"Runtime error: {e}")
+        sys.exit(1)
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}", exc_info=True)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
