@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 import subprocess
@@ -9,6 +10,9 @@ from re import Match, Pattern
 from moz.l10n.formats import UnsupportedFormat
 from moz.l10n.model import Entry
 from moz.l10n.resource import parse_resource
+
+
+logger = logging.getLogger(__name__)
 
 
 StringList = dict[str, dict[str, list[str]]]
@@ -70,7 +74,7 @@ def store_completion(
         completion[locale] = round((locale_stats / source_stats), 4)
 
     for locale, percentage in completion.items():
-        print(f"{locale}: {round(percentage * 100, 2)}%")
+        logger.info(f"{locale}: {round(percentage * 100, 2)}%")
 
     output_file: str = os.path.join(
         stats_path, f"{product}_{version.replace('.', '_')}.json"
@@ -81,7 +85,7 @@ def store_completion(
 
 def get_firefox_releases(repo_path: str) -> dict[str, str]:
     try:
-        print("Extracting tags from repository")
+        logger.info("Extracting tags from repository")
         result = subprocess.run(
             ["git", "-C", repo_path, "tag", "-l", "FIREFOX_*"],
             capture_output=True,
@@ -108,7 +112,7 @@ def get_firefox_releases(repo_path: str) -> dict[str, str]:
 
         return releases
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred: {e}")
         return {}
 
 
@@ -118,18 +122,18 @@ def get_stats_path() -> str:
 
 def update_git_repository(changeset: str, repo_path: str) -> None:
     try:
-        print(f"Updating git repository to changeset: {changeset}")
+        logger.info(f"Updating git repository to changeset: {changeset}")
         result = subprocess.run(
             ["git", "-C", repo_path, "checkout", changeset],
             capture_output=True,
             text=True,
         )
         if result.returncode != 0:
-            print(f"Error git updating repository to {changeset}: {result.stderr}")
-            return None
+            logger.error(f"Error git updating repository to {changeset}: {result.stderr}")
+            return
     except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+        logger.error(f"An error occurred: {e}")
+        return
 
 
 def get_json_files(product: str) -> list[str]:
@@ -172,12 +176,12 @@ def parse_file(
         removed_in = entry.get_meta("{http://mozac.org/tools}removedIn")
         removed = removed_in and int(removed_in) < int(version.split(".")[0])
         if removed:
-            print(f"Ignoring {entry_id} because removed in version {removed_in}")
+            logger.debug(f"Ignoring {entry_id} because removed in version {removed_in}")
 
         tools_ignore = entry.get_meta("{http://schemas.android.com/tools}ignore")
         unused = "UnusedResources" in str(tools_ignore).split(",")
         if unused and not removed:
-            print(f"Ignoring {entry_id} because marked as UnusedResources")
+            logger.debug(f"Ignoring {entry_id} because marked as UnusedResources")
 
         return not (unused or removed)
 
@@ -216,7 +220,7 @@ def parse_file(
                             store(attr_id)
     except UnsupportedFormat:
         if locale == "source":
-            print(f"Unsupported format: {rel_file}")
+            logger.warning(f"Unsupported format: {rel_file}")
     except Exception as e:
-        print(f"Error parsing file: {rel_file}")
-        print(e)
+        logger.error(f"Error parsing file: {rel_file}")
+        logger.error(e)

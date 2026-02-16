@@ -13,6 +13,7 @@ python fenix_stats.py --path path_to_mozilla_firefox_clone
 from __future__ import annotations
 
 import argparse
+import logging
 import os
 import sys
 
@@ -25,6 +26,13 @@ from functions import (
     update_git_repository,
 )
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def extract_string_list(source_path: str, version: str) -> tuple[StringList, list[str]]:
@@ -78,7 +86,7 @@ def extract_string_list(source_path: str, version: str) -> tuple[StringList, lis
                     continue
                 key = f"{product}:{os.path.relpath(source_file, basedir)}"
                 if key not in string_list:
-                    print(
+                    logger.warning(
                         f"Extra file {os.path.relpath(l10n_file, basedir)} in {locale}"
                     )
                     continue

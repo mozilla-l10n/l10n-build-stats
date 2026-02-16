@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import sys
 
@@ -26,6 +27,13 @@ from functions import (
     update_git_repository,
 )
 from moz.l10n.paths import L10nConfigPaths
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 def extract_string_list(
@@ -66,9 +74,9 @@ def extract_string_list(
 
             parse_file(l10n_file_name, rel_file, locale, string_list)
         if missing_files:
-            print(f"Missing {len(missing_files)} files for locale {locale}:")
+            logger.warning(f"Missing {len(missing_files)} files for locale {locale}:")
             for missing_file in missing_files:
-                print(f"  {missing_file}")
+                logger.warning(f"  {missing_file}")
 
     return string_list, locales
 

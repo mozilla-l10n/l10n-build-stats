@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import configparser
 import csv
+import logging
 import os
 
 from collections.abc import Mapping
@@ -17,6 +18,13 @@ from typing import Any, TypedDict
 import gspread
 
 from gspread.utils import ValueInputOption
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 class ServiceAccountDict(TypedDict):
@@ -153,8 +161,8 @@ def main() -> None:
 
         sh.batch_update({"requests": requests})
 
-        print(f"Uploaded {rows} rows x {cols} cols to sheet '{target_name}'.")
-        print(f"Named range '{target_name}' now refers to A1:{end_a1}.")
+        logger.info(f"Uploaded {rows} rows x {cols} cols to sheet '{target_name}'.")
+        logger.info(f"Named range '{target_name}' now refers to A1:{end_a1}.")
 
 
 if __name__ == "__main__":

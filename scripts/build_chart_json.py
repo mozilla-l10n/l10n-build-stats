@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import sys
 
@@ -20,6 +21,13 @@ from typing import Any, TypedDict
 import requests
 
 from functions import get_json_files, get_stats_path, get_version_from_filename
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 
 class LocaleRecord(TypedDict, total=False):
@@ -38,7 +46,7 @@ def get_locale_names() -> LocaleNameMap:
     locale_names: LocaleNameMap = {}
     try:
         while url:
-            print(f"Reading locales (page {page})")
+            logger.info(f"Reading locales (page {page})")
             response = requests.get(url)
             response.raise_for_status()
             data: dict[str, Any] = response.json()
@@ -50,7 +58,7 @@ def get_locale_names() -> LocaleNameMap:
 
         return locale_names
     except requests.RequestException as e:
-        print(f"Error fetching data: {e}")
+        logger.error(f"Error fetching data: {e}")
         sys.exit()
 
 
