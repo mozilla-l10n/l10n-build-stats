@@ -7,141 +7,117 @@
 """
 Extract completion statistics for Firefox for Android (fenix)
 
-python fenix_stats.py --path path_to_mozilla_firefox_clone
+python fenix_stats.py --version 147.0
 """
 
 from __future__ import annotations
 
-import argparse
 import logging
 import os
 import sys
 
-from functions import (
-    StringList,
-    get_firefox_releases,
-    parse_file,
-    read_config,
-    store_completion,
-    update_git_repository,
-)
+from base_stats import StatsExtractor
+from functions import StringList, parse_file, update_git_repository
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
 logger = logging.getLogger(__name__)
 
 
-def extract_string_list(source_path: str, version: str) -> tuple[StringList, list[str]]:
-    """
-    Extract localization strings for Firefox for Android.
+class FenixStatsExtractor(StatsExtractor):
+    """Stats extractor for Firefox for Android (Fenix)."""
 
-    Args:
-        source_path: Path to mozilla-firefox repository
-        version: Version number to extract (e.g., "147.0")
+    def _get_config_params(self) -> list[str]:
+        """Get config parameters needed for Fenix."""
+        return ["mozilla_firefox_path"]
 
-    Returns:
-        Tuple of (string_list dict, list of locales)
+    def get_product_name(self) -> str:
+        """Get product name."""
+        return "fenix"
 
-    Raises:
-        SystemExit: If required TOML config files are missing
-    """
-    toml_paths: dict[str, str] = {
-        "fenix": os.path.join(source_path, "mobile", "android", "fenix", "l10n.toml"),
-        "android-components": os.path.join(
-            source_path, "mobile", "android", "android-components", "l10n.toml"
-        ),
-    }
+    def setup_repositories(self, firefox_releases: dict[str, str], *paths: str) -> None:
+        """Update mozilla-firefox repository to the release tag."""
+        source_path = paths[0]
+        update_git_repository(firefox_releases[self.version], source_path)
 
-    string_list: StringList = {}
-    all_locales: list[str] = []
-    locales: list[str] = []
-    for product, toml_path in toml_paths.items():
-        if not os.path.exists(toml_path):
-            sys.exit(f"Missing config file {os.path.relpath(toml_path, source_path)}.")
+    def extract_string_list(self, *paths: str) -> tuple[StringList, list[str]]:
+        """
+        Extract localization strings for Firefox for Android.
 
-        project_config_paths = L10nConfigPaths(
-            toml_path, locale_map={"android_locale": get_android_locale}
-        )
-        basedir = project_config_paths.base
-        reference_files = [ref_path for ref_path in project_config_paths.ref_paths]
+        Args:
+            *paths: Tuple containing (source_path,)
 
-        for reference_file in reference_files:
-            key = f"{product}:{os.path.relpath(reference_file, basedir)}"
-            parse_file(reference_file, key, "source", string_list, version)
+        Returns:
+            Tuple of (string_list dict, list of locales)
 
-        locales = list(project_config_paths.all_locales)
-        locales.sort()
-        # Storing a superset of all locales across TOML files
-        all_locales = list(set(locales + all_locales))
+        Raises:
+            SystemExit: If required TOML config files are missing
+        """
+        source_path = paths[0]
 
-        all_files = [
-            (ref_path, tgt_path)
-            for (ref_path, tgt_path), _ in project_config_paths.all().items()
-        ]
-        for locale in locales:
-            locale_files = [
+        toml_paths: dict[str, str] = {
+            "fenix": os.path.join(source_path, "mobile", "android", "fenix", "l10n.toml"),
+            "android-components": os.path.join(
+                source_path, "mobile", "android", "android-components", "l10n.toml"
+            ),
+        }
+
+        string_list: StringList = {}
+        all_locales: list[str] = []
+        locales: list[str] = []
+
+        for product, toml_path in toml_paths.items():
+            if not os.path.exists(toml_path):
+                sys.exit(f"Missing config file {os.path.relpath(toml_path, source_path)}.")
+
+            project_config_paths = L10nConfigPaths(
+                toml_path, locale_map={"android_locale": get_android_locale}
+            )
+            basedir = project_config_paths.base
+            reference_files = [ref_path for ref_path in project_config_paths.ref_paths]
+
+            for reference_file in reference_files:
+                key = f"{product}:{os.path.relpath(reference_file, basedir)}"
+                parse_file(reference_file, key, "source", string_list, self.version)
+
+            locales = list(project_config_paths.all_locales)
+            locales.sort()
+            # Storing a superset of all locales across TOML files
+            all_locales = list(set(locales + all_locales))
+
+            all_files = [
                 (ref_path, tgt_path)
-                for (ref_path, raw_tgt_path) in all_files
-                if os.path.exists(
-                    tgt_path := project_config_paths.format_target_path(
-                        raw_tgt_path, locale
-                    )
-                )
+                for (ref_path, tgt_path), _ in project_config_paths.all().items()
             ]
-
-            for source_file, l10n_file in locale_files:
-                # Ignore missing files for locale
-                if not os.path.exists(l10n_file):
-                    continue
-                key = f"{product}:{os.path.relpath(source_file, basedir)}"
-                if key not in string_list:
-                    logger.warning(
-                        f"Extra file {os.path.relpath(l10n_file, basedir)} in {locale}"
+            for locale in locales:
+                locale_files = [
+                    (ref_path, tgt_path)
+                    for (ref_path, raw_tgt_path) in all_files
+                    if os.path.exists(
+                        tgt_path := project_config_paths.format_target_path(
+                            raw_tgt_path, locale
+                        )
                     )
-                    continue
-                parse_file(l10n_file, key, locale, string_list, version)
+                ]
 
-    return string_list, locales
+                for source_file, l10n_file in locale_files:
+                    # Ignore missing files for locale
+                    if not os.path.exists(l10n_file):
+                        continue
+                    key = f"{product}:{os.path.relpath(source_file, basedir)}"
+                    if key not in string_list:
+                        logger.warning(
+                            f"Extra file {os.path.relpath(l10n_file, basedir)} in {locale}"
+                        )
+                        continue
+                    parse_file(l10n_file, key, locale, string_list, self.version)
+
+        return string_list, locales
 
 
 def main() -> None:
     """Main entry point for fenix stats extraction."""
-    cl_parser = argparse.ArgumentParser()
-    cl_parser.add_argument(
-        "--version",
-        required=True,
-        dest="version",
-        help="Version of Firefox to check",
-    )
-    args = cl_parser.parse_args()
-
-    try:
-        version: str = args.version
-        (source_path,) = read_config(["mozilla_firefox_path"])
-
-        # Get the release tags from mozilla-unified
-        firefox_releases = get_firefox_releases(source_path)
-        if version not in firefox_releases:
-            sys.exit(f"Version {version} not available as a release in repository tags")
-
-        # Update the repository to the tag
-        update_git_repository(firefox_releases[version], source_path)
-
-        # Extract list statistics
-        string_list, locales = extract_string_list(source_path, version)
-
-        # Store completion levels in JSON file
-        store_completion(string_list, version, locales, "fenix")
-    except RuntimeError as e:
-        logger.error(f"Runtime error: {e}")
-        sys.exit(1)
-    except Exception as e:
-        logger.error(f"Unexpected error: {e}", exc_info=True)
-        sys.exit(1)
+    FenixStatsExtractor.main()
 
 
 if __name__ == "__main__":
