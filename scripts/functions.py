@@ -3,7 +3,6 @@ import logging
 import os
 import re
 import subprocess
-import sys
 
 from re import Match, Pattern
 
@@ -11,46 +10,14 @@ from moz.l10n.formats import UnsupportedFormat
 from moz.l10n.model import Entry
 from moz.l10n.resource import parse_resource
 
+# Import read_config from new config module for backwards compatibility
+from config import read_config  # noqa: F401
+
 
 logger = logging.getLogger(__name__)
 
 
 StringList = dict[str, dict[str, list[str]]]
-
-
-def read_config(params: list[str]) -> tuple[str, ...]:
-    # Get absolute path of the repository's root from the script location
-    root_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
-    config_file = os.path.join(root_folder, "config", "config")
-
-    # Abort if config file is missing
-    if not os.path.exists(config_file):
-        sys.exit("ERROR: config file is missing")
-
-    # Read all available paths in the config file
-    paths: dict[str, str] = {}
-    with open(config_file) as cfg_file:
-        for line in cfg_file:
-            line = line.strip()
-            # Ignore comments and empty lines
-            if line == "" or line.startswith("#"):
-                continue
-            paths[line.split("=")[0]] = line.split("=")[1].strip('"')
-
-    results: list[str] = []
-    for param in params:
-        if param not in paths:
-            sys.exit(f"{param} is not defined in the config file")
-        else:
-            if not os.path.exists(paths[param]):
-                sys.exit(
-                    "Path defined for {} ({}) does not exist".format(
-                        param, paths[param]
-                    )
-                )
-        results.append(paths[param])
-
-    return tuple(results)
 
 
 def store_completion(
