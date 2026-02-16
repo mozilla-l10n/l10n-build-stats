@@ -2,15 +2,12 @@
 
 import json
 import os
-import tempfile
-
-from pathlib import Path
-from unittest.mock import MagicMock, mock_open, patch
-
-import pytest
 
 # Add parent directory to path to import scripts
 import sys
+
+from unittest.mock import patch
+
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 

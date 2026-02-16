@@ -7,14 +7,14 @@ import sys
 
 from abc import ABC, abstractmethod
 
-from config import read_config
 from functions import (
     StringList,
     get_firefox_releases,
     store_completion,
-    update_git_repository,
 )
 from logging_config import get_logger, setup_logging
+
+from config import read_config
 
 
 logger = get_logger(__name__)

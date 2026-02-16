@@ -5,14 +5,10 @@ import subprocess
 
 from re import Match, Pattern
 
+from logging_config import get_logger
 from moz.l10n.formats import UnsupportedFormat
 from moz.l10n.model import Entry
 from moz.l10n.resource import parse_resource
-
-from logging_config import get_logger
-
-# Import read_config from new config module for backwards compatibility
-from config import read_config  # noqa: F401
 
 
 logger = get_logger(__name__)

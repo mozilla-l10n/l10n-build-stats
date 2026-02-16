@@ -3,12 +3,9 @@
 import logging
 import os
 import sys
-import tempfile
 
-from pathlib import Path
 from unittest.mock import patch
 
-import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 
