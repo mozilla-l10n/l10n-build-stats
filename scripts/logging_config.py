@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 # Default log format
-DEFAULT_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+DEFAULT_FORMAT = "%(levelname)s - %(message)s"
 VERBOSE_FORMAT = (
     "%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s"
 )
