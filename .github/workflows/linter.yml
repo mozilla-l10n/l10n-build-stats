@@ -35,3 +35,10 @@ jobs:
         run: ruff format scripts --check
       - name: pyright
         run: pyright scripts
+      - name: Run tests
+        run: pytest tests/ --cov=scripts --cov-report=term --cov-report=xml
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
