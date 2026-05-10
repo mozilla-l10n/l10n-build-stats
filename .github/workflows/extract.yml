@@ -1,0 +1,132 @@
+name: Auto-extract latest Firefox version
+
+on:
+  schedule:
+    - cron: '30 15 * * 2'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: true
+      - name: Fetch latest Firefox release version
+        id: latest
+        run: |
+          set -euo pipefail
+          version=$(curl --fail --silent --show-error \
+            https://product-details.mozilla.org/1.0/firefox_versions.json \
+            | python3 -c "import json,sys; print(json.load(sys.stdin)['LATEST_FIREFOX_VERSION'])")
+          if [ -z "$version" ]; then
+            echo "Failed to read LATEST_FIREFOX_VERSION" >&2
+            exit 1
+          fi
+          echo "Latest Firefox version: $version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Check if data already extracted
+        id: check
+        run: |
+          set -euo pipefail
+          version="${{ steps.latest.outputs.version }}"
+          # Stats filenames replace dots with underscores (e.g. 150.0.2 -> 150_0_2)
+          suffix="${version//./_}"
+          fx="stats/firefox_${suffix}.json"
+          fenix="stats/fenix_${suffix}.json"
+          if [ -f "$fx" ] && [ -f "$fenix" ]; then
+            echo "Already extracted: $fx and $fenix"
+            echo "needs_extract=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Missing data for ${{ steps.latest.outputs.version }} ($fx / $fenix); will extract"
+            echo "needs_extract=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install Python
+        if: steps.check.outputs.needs_extract == 'true'
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.11'
+      - name: Set up uv
+        if: steps.check.outputs.needs_extract == 'true'
+        uses: astral-sh/setup-uv@5a095e7a2014a4212f075830d4f7277575a9d098 # v7.3.1
+        with:
+          enable-cache: true
+          cache-dependency-glob: |
+            **/scripts/*.txt
+          version: "0.15.12"
+      - name: Compute Firefox release tag
+        if: steps.check.outputs.needs_extract == 'true'
+        id: tag
+        run: |
+          set -euo pipefail
+          version="${{ steps.latest.outputs.version }}"
+          echo "tag=FIREFOX_${version//./_}_RELEASE" >> "$GITHUB_OUTPUT"
+      - name: Sparse-checkout mozilla-firefox/firefox at release tag
+        if: steps.check.outputs.needs_extract == 'true'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: mozilla-firefox/firefox
+          ref: ${{ steps.tag.outputs.tag }}
+          path: firefox
+          persist-credentials: false
+          # Mirrors the path list from
+          # https://github.com/mozilla-l10n/firefox-l10n-source/blob/main/.github/update-config.json
+          # plus "mobile" for Fenix.
+          sparse-checkout: |
+            browser/branding/official/locales
+            browser/extensions/formautofill/locales
+            browser/extensions/report-site-issue/locales
+            browser/locales
+            devtools/client/locales
+            devtools/shared/locales
+            devtools/startup/locales
+            dom/locales
+            mobile
+            netwerk/locales
+            security/manager/locales
+            toolkit/locales
+      - name: Checkout firefox-l10n
+        if: steps.check.outputs.needs_extract == 'true'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          repository: mozilla-l10n/firefox-l10n
+          path: firefox-l10n
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Write source repo paths
+        if: steps.check.outputs.needs_extract == 'true'
+        run: |
+          mkdir -p config
+          {
+            echo "mozilla_firefox_path=\"$GITHUB_WORKSPACE/firefox\""
+            echo "l10n_path=\"$GITHUB_WORKSPACE/firefox-l10n\""
+          } > config/config
+      - name: Write Google Sheets credentials
+        if: steps.check.outputs.needs_extract == 'true'
+        env:
+          GSHEETS_CONFIG: ${{ secrets.GSHEETS_CONFIG }}
+        run: printf '%s\n' "$GSHEETS_CONFIG" > api_config.env
+      - name: Run extraction
+        if: steps.check.outputs.needs_extract == 'true'
+        run: bash scripts/extract_version.sh "${{ steps.latest.outputs.version }}"
+      - name: Commit and push extracted data
+        if: steps.check.outputs.needs_extract == 'true'
+        run: |
+          set -euo pipefail
+          version="${{ steps.latest.outputs.version }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add stats/ docs/data/data.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git commit -m "Extract data for fx${version}"
+          git push origin HEAD:main
