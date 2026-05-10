@@ -118,6 +118,83 @@ function isDotReleasePoint(ctx) {
     return typeof v === 'string' && v.split('.').length > 2;
 }
 
+function buildChartOptions({ isDark, xMin, xMax, legend }) {
+    return {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 350 },
+        plugins: {
+            legend: {
+                display: true,
+                labels: {
+                    color: isDark ? '#f9fafb' : '#303541ff',
+                    ...legend,
+                },
+            },
+            tooltip: {
+                callbacks: {
+                    title: (items) => items[0]?.raw?.version || '',
+                    label: (ctx) =>
+                        `${ctx.dataset.label}: ${ctx.parsed.y != null ? ctx.parsed.y.toFixed(2) : '—'}%`,
+                },
+            },
+            zoom: {
+                zoom: {
+                    wheel: { enabled: true },
+                    pinch: { enabled: true },
+                    mode: 'x',
+                },
+                pan: {
+                    enabled: true,
+                    mode: 'x',
+                },
+                limits: {
+                    x: { min: 'original', max: 'original' },
+                },
+            },
+        },
+        scales: {
+            x: {
+                type: 'linear',
+                min: xMin,
+                max: xMax,
+                ticks: {
+                    color: isDark ? '#9ca3af' : '#374151',
+                    stepSize: 1,
+                    autoSkip: false,
+                    maxRotation: 0,
+                    callback: majorVersionTickCallback,
+                },
+                grid: { color: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(104, 93, 93, 0.17)' },
+            },
+            y: {
+                grace: '5%',
+                title: {
+                    display: true,
+                    text: 'Completion %',
+                    color: isDark ? '#9ca3af' : '#374151',
+                    font: { size: 13 },
+                },
+                ticks: {
+                    color: isDark ? '#9ca3af' : '#374151',
+                    callback: v => (v > 100 ? '' : v.toFixed(2) + '%'),
+                },
+                grid: { color: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)' },
+            },
+        },
+        interaction: {
+            intersect: false,
+            mode: 'index',
+        },
+    };
+}
+
+function xRangeFromLabels(labels) {
+    if (!labels.length) return { xMin: undefined, xMax: undefined };
+    const xs = labels.map(versionToX);
+    return { xMin: Math.floor(Math.min(...xs)), xMax: Math.ceil(Math.max(...xs)) };
+}
+
 function pickDefaultLocale(allLocales) {
     const param = urlParams.get('locale');
     if (param && allLocales.has(param)) return param;
@@ -444,83 +521,16 @@ async function render(db, locale, locale_name) {
         };
     });
 
-    const xs = labels.map(versionToX);
-    const xMin = xs.length ? Math.floor(Math.min(...xs)) : undefined;
-    const xMax = xs.length ? Math.ceil(Math.max(...xs)) : undefined;
-
-    const data = { datasets };
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 350 },
-        plugins: {
-            legend: {
-                display: true,
-                labels: {
-                    color: isDark ? '#f9fafb' : '#303541ff',
-                    font: { size: 13 },
-                    padding: 15,
-                }
-            },
-            tooltip: {
-                callbacks: {
-                    title: (items) => items[0]?.raw?.version || '',
-                    label: (ctx) =>
-                        `${ctx.dataset.label}: ${ctx.parsed.y != null ? ctx.parsed.y.toFixed(2) : '—'}%`,
-                },
-            },
-            zoom: {
-                zoom: {
-                    wheel: { enabled: true },
-                    pinch: { enabled: true },
-                    mode: 'x',
-                },
-                pan: {
-                    enabled: true,
-                    mode: 'x',
-                },
-                limits: {
-                    x: { min: 'original', max: 'original' },
-                },
-            },
-        },
-        scales: {
-            x: {
-                type: 'linear',
-                min: xMin,
-                max: xMax,
-                ticks: {
-                    color: isDark ? '#9ca3af' : '#374151',
-                    stepSize: 1,
-                    autoSkip: false,
-                    maxRotation: 0,
-                    callback: majorVersionTickCallback,
-                },
-                grid: { color: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(104, 93, 93, 0.17)' }
-            },
-            y: {
-                grace: '5%',
-                title: {
-                    display: true,
-                    text: 'Completion %',
-                    color: isDark ? '#9ca3af' : '#374151',
-                    font: { size: 13 },
-                },
-                ticks: {
-                    color: isDark ? '#9ca3af' : '#374151',
-                    callback: v => (v > 100 ? '' : v.toFixed(2) + '%')
-                },
-                grid: { color: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)' },
-            },
-        },
-        interaction: {
-            intersect: false,
-            mode: 'index',
-        },
-    };
+    const { xMin, xMax } = xRangeFromLabels(labels);
+    const options = buildChartOptions({
+        isDark,
+        xMin,
+        xMax,
+        legend: { font: { size: 13 }, padding: 15 },
+    });
 
     if (chart) chart.destroy();
-    chart = new Chart(chartEl, { type: 'line', data, options });
+    chart = new Chart(chartEl, { type: 'line', data: { datasets }, options });
 
     updateStatsPanel(datasets, labels);
     setStatus(`Showing ${labels.length} versions for ${locale_name || locale} (${locale}). Use mouse wheel to zoom, drag to pan.`);
@@ -588,84 +598,16 @@ function renderComparison() {
         });
     });
 
-    const xs = labels.map(versionToX);
-    const xMin = xs.length ? Math.floor(Math.min(...xs)) : undefined;
-    const xMax = xs.length ? Math.ceil(Math.max(...xs)) : undefined;
-
-    const data = { datasets };
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 350 },
-        plugins: {
-            legend: {
-                display: true,
-                labels: {
-                    color: isDark ? '#f9fafb' : '#303541ff',
-                    font: { size: 12 },
-                    padding: 10,
-                    boxWidth: 30,
-                }
-            },
-            tooltip: {
-                callbacks: {
-                    title: (items) => items[0]?.raw?.version || '',
-                    label: (ctx) =>
-                        `${ctx.dataset.label}: ${ctx.parsed.y != null ? ctx.parsed.y.toFixed(2) : '—'}%`,
-                },
-            },
-            zoom: {
-                zoom: {
-                    wheel: { enabled: true },
-                    pinch: { enabled: true },
-                    mode: 'x',
-                },
-                pan: {
-                    enabled: true,
-                    mode: 'x',
-                },
-                limits: {
-                    x: { min: 'original', max: 'original' },
-                },
-            },
-        },
-        scales: {
-            x: {
-                type: 'linear',
-                min: xMin,
-                max: xMax,
-                ticks: {
-                    color: isDark ? '#9ca3af' : '#374151',
-                    stepSize: 1,
-                    autoSkip: false,
-                    maxRotation: 0,
-                    callback: majorVersionTickCallback,
-                },
-                grid: { color: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(104, 93, 93, 0.17)' }
-            },
-            y: {
-                grace: '5%',
-                title: {
-                    display: true,
-                    text: 'Completion %',
-                    color: isDark ? '#9ca3af' : '#374151',
-                    font: { size: 13 },
-                },
-                ticks: {
-                    color: isDark ? '#9ca3af' : '#374151',
-                    callback: v => (v > 100 ? '' : v.toFixed(2) + '%')
-                },
-                grid: { color: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.5)' },
-            },
-        },
-        interaction: {
-            intersect: false,
-            mode: 'index',
-        },
-    };
+    const { xMin, xMax } = xRangeFromLabels(labels);
+    const options = buildChartOptions({
+        isDark,
+        xMin,
+        xMax,
+        legend: { font: { size: 12 }, padding: 10, boxWidth: 30 },
+    });
 
     if (chart) chart.destroy();
-    chart = new Chart(chartEl, { type: 'line', data, options });
+    chart = new Chart(chartEl, { type: 'line', data: { datasets }, options });
 
     updateStatsPanel(datasets, labels);
     setStatus(`Comparing ${selectedLocales.length} locale${selectedLocales.length > 1 ? 's' : ''} across ${labels.length} versions. Use mouse wheel to zoom, drag to pan.`);

@@ -154,19 +154,26 @@ def get_json_files(product: str) -> list[str]:
     return json_files
 
 
+_VERSION_FILENAME_RE: Pattern[str] = re.compile(r"^[a-z]+_(\d+(?:_\d+)*)\.json$")
+
+
 def get_version_from_filename(filename: str) -> tuple[str, str]:
     """
     Extract version information from a statistics filename.
 
     Args:
-        filename: Filename like "firefox_147_0.json"
+        filename: Filename like "firefox_147_0.json" or "fenix_150_0_2.json"
 
     Returns:
         Tuple of (full_version, major_version) e.g., ("147.0", "147")
+
+    Raises:
+        ValueError: If filename does not match the expected
+            "<product>_<digits>_<digits>...json" pattern.
     """
-    version_re = re.compile(r"_([\d_]*)")
-    match: Match[str] | None = version_re.search(filename)
-    assert match is not None
+    match: Match[str] | None = _VERSION_FILENAME_RE.match(filename)
+    if match is None:
+        raise ValueError(f"Unrecognized stats filename: {filename!r}")
     version: str = match.group(1).replace("_", ".")
     major_version: str = version.split(".")[0]
 

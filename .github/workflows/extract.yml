@@ -31,7 +31,7 @@ jobs:
             version="$INPUT_VERSION"
             echo "Using manually specified version: $version"
           else
-            version=$(curl --fail --silent --show-error \
+            version=$(curl --fail --silent --show-error --retry 5 --retry-delay 5 \
               https://product-details.mozilla.org/1.0/firefox_versions.json \
               | python3 -c "import json,sys; print(json.load(sys.stdin)['LATEST_FIREFOX_VERSION'])")
             if [ -z "$version" ]; then
@@ -87,7 +87,9 @@ jobs:
           persist-credentials: false
           # Mirrors the path list from
           # https://github.com/mozilla-l10n/firefox-l10n-source/blob/main/.github/update-config.json
-          # plus "mobile" for Fenix.
+          # plus the two Fenix sources read by scripts/fenix_stats.py
+          # (mobile/android/fenix/l10n.toml and
+          # mobile/android/android-components/l10n.toml).
           sparse-checkout: |
             browser/branding/official/locales
             browser/extensions/formautofill/locales
@@ -97,7 +99,9 @@ jobs:
             devtools/shared/locales
             devtools/startup/locales
             dom/locales
-            mobile
+            mobile/android/android-components
+            mobile/android/fenix
+            mobile/android/locales
             netwerk/locales
             security/manager/locales
             toolkit/locales
