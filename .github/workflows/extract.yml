@@ -1,4 +1,4 @@
-name: Auto-extract latest Firefox version
+name: Extract latest Firefox data
 
 on:
   schedule:
@@ -57,7 +57,7 @@ jobs:
           enable-cache: true
           cache-dependency-glob: |
             **/scripts/*.txt
-          version: "0.15.12"
+          version: "0.11.12"
       - name: Compute Firefox release tag
         if: steps.check.outputs.needs_extract == 'true'
         id: tag
