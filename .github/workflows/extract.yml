@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '30 15 * * 2'
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to extract (e.g. 150.0 or 150.0.2). Leave empty to use the latest released version.'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -16,18 +21,25 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: true
-      - name: Fetch latest Firefox release version
+      - name: Resolve version to extract
         id: latest
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
           set -euo pipefail
-          version=$(curl --fail --silent --show-error \
-            https://product-details.mozilla.org/1.0/firefox_versions.json \
-            | python3 -c "import json,sys; print(json.load(sys.stdin)['LATEST_FIREFOX_VERSION'])")
-          if [ -z "$version" ]; then
-            echo "Failed to read LATEST_FIREFOX_VERSION" >&2
-            exit 1
+          if [ -n "$INPUT_VERSION" ]; then
+            version="$INPUT_VERSION"
+            echo "Using manually specified version: $version"
+          else
+            version=$(curl --fail --silent --show-error \
+              https://product-details.mozilla.org/1.0/firefox_versions.json \
+              | python3 -c "import json,sys; print(json.load(sys.stdin)['LATEST_FIREFOX_VERSION'])")
+            if [ -z "$version" ]; then
+              echo "Failed to read LATEST_FIREFOX_VERSION" >&2
+              exit 1
+            fi
+            echo "Latest Firefox version: $version"
           fi
-          echo "Latest Firefox version: $version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - name: Check if data already extracted
         id: check
