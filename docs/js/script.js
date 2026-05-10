@@ -379,52 +379,56 @@ exportBtn.addEventListener('click', () => {
     link.click();
 });
 
-// Calculate statistics
-function calculateStats(data) {
-    const values = data.filter(v => v !== null);
-    if (!values.length) return { avg: null, min: null, max: null, latest: null };
-
-    const avg = values.reduce((a, b) => a + b, 0) / values.length;
-    const min = Math.min(...values);
-    const max = Math.max(...values);
-    const latest = values[values.length - 1];
-
-    return { avg, min, max, latest };
+// Compute avg + latest per product. `dataByProduct` is { [productId]: [{x,y,version}, ...] }.
+function calculateProductStats(dataByProduct) {
+    const out = {};
+    for (const p of PRODUCTS) {
+        const points = (dataByProduct[p.id] || []).filter(pt => pt && pt.y != null);
+        if (!points.length) { out[p.id] = null; continue; }
+        const ys = points.map(pt => pt.y);
+        const avg = ys.reduce((a, b) => a + b, 0) / ys.length;
+        const latest = points.reduce((best, pt) => (pt.x > best.x ? pt : best), points[0]).y;
+        out[p.id] = { avg, latest };
+    }
+    return out;
 }
 
-function updateStatsPanel(datasets, labels) {
+function renderStatRows(containerId, stats, key) {
+    const html = PRODUCTS.map(p => {
+        const s = stats[p.id];
+        const value = s ? s[key].toFixed(2) + '%' : '—';
+        const complete = s && s[key] === 100 ? ' complete' : '';
+        return `
+            <div class="stat-row">
+                <span class="stat-product">${p.label}</span>
+                <span class="stat-product-value${complete}">${value}</span>
+            </div>`;
+    }).join('');
+    document.getElementById(containerId).innerHTML = html;
+}
+
+function updateStatsPanel(datasets) {
     if (!datasets.length) {
         statsCard.style.display = 'none';
         return;
     }
 
-    // Combine all product data for overall stats. Data points are objects
-    // ({x, y, version}); pull y for the stats.
-    const allData = [];
+    const byProduct = {};
     datasets.forEach(ds => {
-        ds.data.forEach(v => {
-            if (v == null) return;
-            const y = typeof v === 'number' ? v : v.y;
-            if (y != null) allData.push(y);
-        });
+        const pid = ds.productId;
+        if (!pid) return;
+        (byProduct[pid] ||= []).push(...ds.data);
     });
 
-    const stats = calculateStats(allData);
-
-    if (stats.avg !== null) {
-        document.getElementById('statAvg').textContent = stats.avg.toFixed(2) + '%';
-        document.getElementById('statMin').textContent = stats.min.toFixed(2) + '%';
-        document.getElementById('statMax').textContent = stats.max.toFixed(2) + '%';
-        document.getElementById('statLatest').textContent = stats.latest.toFixed(2) + '%';
-
-        // Highlight if latest is 100%
-        const latestEl = document.getElementById('statLatest');
-        latestEl.classList.toggle('complete', stats.latest === 100);
-
-        statsCard.style.display = 'block';
-    } else {
+    const stats = calculateProductStats(byProduct);
+    if (!PRODUCTS.some(p => stats[p.id])) {
         statsCard.style.display = 'none';
+        return;
     }
+
+    renderStatRows('statAvgRows', stats, 'avg');
+    renderStatRows('statLatestRows', stats, 'latest');
+    statsCard.style.display = 'block';
 }
 
 async function init() {
@@ -509,6 +513,7 @@ async function render(db, locale, locale_name) {
             .map(v => ({ x: versionToX(v), y: prodObj[v] * 100, version: v }));
         return {
             label: p.label,
+            productId: p.id,
             data,
             borderColor: isDark ? p.darkColor : p.color,
             backgroundColor: isDark ? p.darkColor + '20' : p.color + '20',
@@ -532,7 +537,7 @@ async function render(db, locale, locale_name) {
     if (chart) chart.destroy();
     chart = new Chart(chartEl, { type: 'line', data: { datasets }, options });
 
-    updateStatsPanel(datasets, labels);
+    updateStatsPanel(datasets);
     setStatus(`Showing ${labels.length} versions for ${locale_name || locale} (${locale}). Use mouse wheel to zoom, drag to pan.`);
 }
 
@@ -609,7 +614,7 @@ function renderComparison() {
     if (chart) chart.destroy();
     chart = new Chart(chartEl, { type: 'line', data: { datasets }, options });
 
-    updateStatsPanel(datasets, labels);
+    statsCard.style.display = 'none';
     setStatus(`Comparing ${selectedLocales.length} locale${selectedLocales.length > 1 ? 's' : ''} across ${labels.length} versions. Use mouse wheel to zoom, drag to pan.`);
 }
 
