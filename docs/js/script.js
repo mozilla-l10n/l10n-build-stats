@@ -508,9 +508,11 @@ async function render(db, locale, locale_name) {
 
     const datasets = PRODUCTS.map(p => {
         const prodObj = entry[p.id] || {};
-        const data = labels
-            .filter(v => v in prodObj)
-            .map(v => ({ x: versionToX(v), y: prodObj[v] * 100, version: v }));
+        const data = labels.map(v => ({
+            x: versionToX(v),
+            y: v in prodObj ? prodObj[v] * 100 : null,
+            version: v,
+        }));
         return {
             label: p.label,
             productId: p.id,
@@ -580,9 +582,11 @@ function renderComparison() {
 
         PRODUCTS.forEach((product, prodIdx) => {
             const prodObj = entry[product.id] || {};
-            const data = labels
-                .filter(v => v in prodObj)
-                .map(v => ({ x: versionToX(v), y: prodObj[v] * 100, version: v }));
+            const data = labels.map(v => ({
+                x: versionToX(v),
+                y: v in prodObj ? prodObj[v] * 100 : null,
+                version: v,
+            }));
 
             // Use different line styles for products within the same locale
             const dashPattern = prodIdx === 0 ? [] : [5, 5];
