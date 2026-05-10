@@ -17,7 +17,7 @@ from the [Firefox repository](https://github.com/mozilla-firefox/firefox).
 
 ### Prerequisites
 
-- Python 3.11 or higher
+- Python 3.13 or higher
 - Git
 - Access to mozilla-firefox and firefox-l10n repositories
 

@@ -45,25 +45,30 @@ def main() -> None:
     json_files = get_json_files(product)
 
     raw_build_data: dict[str, BuildEntry] = {}
+    version_majors: dict[str, str] = {}
     locales: list[str] = []
     for json_file in json_files:
         with open(os.path.join(stats_path, json_file)) as f:
             data: dict[str, float | int] = json.load(f)
             version, major_version = get_version_from_filename(json_file)
             for locale, percentage in data.items():
-                if major_version not in raw_build_data:
-                    raw_build_data[major_version] = {
+                if version not in raw_build_data:
+                    raw_build_data[version] = {
                         "version": version,
                         "completion": {},
                     }
+                    version_majors[version] = major_version
                 if locale not in locales:
                     locales.append(locale)
-                raw_build_data[major_version]["completion"][locale] = percentage
+                raw_build_data[version]["completion"][locale] = percentage
     locales.sort()
 
-    # Sort the dictionary by major version
+    # Sort the dictionary by full version
     build_data: dict[str, BuildEntry] = {
-        k: raw_build_data[k] for k in sorted(raw_build_data, key=lambda x: int(x))
+        k: raw_build_data[k]
+        for k in sorted(
+            raw_build_data, key=lambda x: tuple(int(p) for p in x.split("."))
+        )
     }
 
     csv_path = os.path.join(stats_path, f"{product}_locales.csv")
@@ -72,10 +77,10 @@ def main() -> None:
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames, lineterminator="\n")
 
         writer.writeheader()
-        for major_version, version_data in build_data.items():
+        for version, version_data in build_data.items():
             row: dict[str, object] = {
                 "Version": f"'{version_data['version']}",  # Force string in Sheets
-                "Major version": int(major_version),
+                "Major version": int(version_majors[version]),
             }
             row.update(version_data["completion"])
             writer.writerow(row)

@@ -84,7 +84,38 @@ function parseAcceptLanguage() {
 }
 
 function versionCompare(a, b) {
-    return Number(a) - Number(b);
+    const pa = a.split('.').map(Number);
+    const pb = b.split('.').map(Number);
+    const len = Math.max(pa.length, pb.length);
+    for (let i = 0; i < len; i++) {
+        const va = pa[i] ?? 0;
+        const vb = pb[i] ?? 0;
+        if (va !== vb) return va - vb;
+    }
+    return 0;
+}
+
+// Map a version string to an x-axis position. Major releases land on integers
+// (so "150.0" → 150). Dot releases (e.g. "150.0.1", "150.0.2") are placed at
+// 0.25-unit increments after the major, so the gap between dot releases is
+// 1/4 of the gap between two major releases.
+function versionToX(v) {
+    const parts = v.split('.').map(Number);
+    const major = parts[0] || 0;
+    const dot = parts[2] || 0;
+    return major + dot * 0.25;
+}
+
+// Linear-scale tick callback: only render labels at integer positions
+// (i.e. major releases). Dot-release positions get an empty label and just
+// appear as data markers on the chart.
+function majorVersionTickCallback(value) {
+    return Number.isInteger(value) ? value + '.0' : '';
+}
+
+function isDotReleasePoint(ctx) {
+    const v = ctx?.raw?.version;
+    return typeof v === 'string' && v.split('.').length > 2;
 }
 
 function pickDefaultLocale(allLocales) {
@@ -290,11 +321,14 @@ function updateStatsPanel(datasets, labels) {
         return;
     }
 
-    // Combine all product data for overall stats
+    // Combine all product data for overall stats. Data points are objects
+    // ({x, y, version}); pull y for the stats.
     const allData = [];
     datasets.forEach(ds => {
-        ds.data.forEach((v, i) => {
-            if (v !== null) allData.push(v);
+        ds.data.forEach(v => {
+            if (v == null) return;
+            const y = typeof v === 'number' ? v : v.y;
+            if (y != null) allData.push(y);
         });
     });
 
@@ -393,22 +427,28 @@ async function render(db, locale, locale_name) {
 
     const datasets = PRODUCTS.map(p => {
         const prodObj = entry[p.id] || {};
-        const values = labels.map(v => (v in prodObj ? prodObj[v] * 100 : null));
+        const data = labels
+            .filter(v => v in prodObj)
+            .map(v => ({ x: versionToX(v), y: prodObj[v] * 100, version: v }));
         return {
             label: p.label,
-            data: values,
+            data,
             borderColor: isDark ? p.darkColor : p.color,
             backgroundColor: isDark ? p.darkColor + '20' : p.color + '20',
             spanGaps: true,
             tension: 0.25,
             borderWidth: 2.5,
-            pointRadius: 3,
-            pointHoverRadius: 5,
+            pointRadius: ctx => isDotReleasePoint(ctx) ? 1.5 : 3,
+            pointHoverRadius: ctx => isDotReleasePoint(ctx) ? 3 : 5,
             pointBackgroundColor: isDark ? p.darkColor : p.color,
         };
     });
 
-    const data = { labels, datasets };
+    const xs = labels.map(versionToX);
+    const xMin = xs.length ? Math.floor(Math.min(...xs)) : undefined;
+    const xMax = xs.length ? Math.ceil(Math.max(...xs)) : undefined;
+
+    const data = { datasets };
     const options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -424,6 +464,7 @@ async function render(db, locale, locale_name) {
             },
             tooltip: {
                 callbacks: {
+                    title: (items) => items[0]?.raw?.version || '',
                     label: (ctx) =>
                         `${ctx.dataset.label}: ${ctx.parsed.y != null ? ctx.parsed.y.toFixed(2) : '—'}%`,
                 },
@@ -445,7 +486,16 @@ async function render(db, locale, locale_name) {
         },
         scales: {
             x: {
-                ticks: { color: isDark ? '#9ca3af' : '#374151' },
+                type: 'linear',
+                min: xMin,
+                max: xMax,
+                ticks: {
+                    color: isDark ? '#9ca3af' : '#374151',
+                    stepSize: 1,
+                    autoSkip: false,
+                    maxRotation: 0,
+                    callback: majorVersionTickCallback,
+                },
                 grid: { color: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(104, 93, 93, 0.17)' }
             },
             y: {
@@ -515,28 +565,34 @@ function renderComparison() {
 
         PRODUCTS.forEach((product, prodIdx) => {
             const prodObj = entry[product.id] || {};
-            const values = labels.map(v => (v in prodObj ? prodObj[v] * 100 : null));
+            const data = labels
+                .filter(v => v in prodObj)
+                .map(v => ({ x: versionToX(v), y: prodObj[v] * 100, version: v }));
 
             // Use different line styles for products within the same locale
             const dashPattern = prodIdx === 0 ? [] : [5, 5];
 
             datasets.push({
                 label: `${localeName} – ${product.label}`,
-                data: values,
+                data,
                 borderColor: isDark ? colorPalette.dark : colorPalette.light,
                 backgroundColor: (isDark ? colorPalette.dark : colorPalette.light) + '20',
                 borderDash: dashPattern,
                 spanGaps: true,
                 tension: 0.25,
                 borderWidth: 2.5,
-                pointRadius: 2,
-                pointHoverRadius: 4,
+                pointRadius: ctx => isDotReleasePoint(ctx) ? 1 : 2,
+                pointHoverRadius: ctx => isDotReleasePoint(ctx) ? 2.5 : 4,
                 pointBackgroundColor: isDark ? colorPalette.dark : colorPalette.light,
             });
         });
     });
 
-    const data = { labels, datasets };
+    const xs = labels.map(versionToX);
+    const xMin = xs.length ? Math.floor(Math.min(...xs)) : undefined;
+    const xMax = xs.length ? Math.ceil(Math.max(...xs)) : undefined;
+
+    const data = { datasets };
     const options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -553,6 +609,7 @@ function renderComparison() {
             },
             tooltip: {
                 callbacks: {
+                    title: (items) => items[0]?.raw?.version || '',
                     label: (ctx) =>
                         `${ctx.dataset.label}: ${ctx.parsed.y != null ? ctx.parsed.y.toFixed(2) : '—'}%`,
                 },
@@ -574,7 +631,16 @@ function renderComparison() {
         },
         scales: {
             x: {
-                ticks: { color: isDark ? '#9ca3af' : '#374151' },
+                type: 'linear',
+                min: xMin,
+                max: xMax,
+                ticks: {
+                    color: isDark ? '#9ca3af' : '#374151',
+                    stepSize: 1,
+                    autoSkip: false,
+                    maxRotation: 0,
+                    callback: majorVersionTickCallback,
+                },
                 grid: { color: isDark ? 'rgba(75, 85, 99, 0.3)' : 'rgba(104, 93, 93, 0.17)' }
             },
             y: {
