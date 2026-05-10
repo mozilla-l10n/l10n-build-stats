@@ -29,15 +29,16 @@ root_path="$(dirname "${script_path}")"
 
 # Check for exactly one argument
 if [ "$#" -ne 1 ]; then
-  echo -e "Not enough arguments.\nUsage: $0 <version-number (e.g. 138.0)>" >&2
+  echo -e "Not enough arguments.\nUsage: $0 <version-number (e.g. 138.0 or 138.0.1)>" >&2
   exit 1
 fi
 
 VERSION="$1"
-# Check if the version number ends with .0, if not warn and add it.
-if [[ $VERSION != *.0 ]]; then
+# If the version has no dot at all (e.g. "138"), assume a major release and append .0.
+# Otherwise pass through unchanged so dot releases like "138.0.1" work as-is.
+if [[ $VERSION != *.* ]]; then
   VERSION="${VERSION}.0"
-  echo -e "Warning: Version number should end with .0. Changed to: $VERSION"
+  echo -e "Warning: Version number should include a minor part. Changed to: $VERSION"
 fi
 
 setupVirtualEnv

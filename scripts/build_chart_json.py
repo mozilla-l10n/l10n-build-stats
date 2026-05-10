@@ -29,8 +29,8 @@ logger = get_logger(__name__)
 
 class LocaleRecord(TypedDict, total=False):
     name: str
-    fenix: dict[int, float | int]
-    firefox: dict[int, float | int]
+    fenix: dict[str, float | int]
+    firefox: dict[str, float | int]
 
 
 CompletionData = dict[str, LocaleRecord]
@@ -92,7 +92,7 @@ async def async_main(version: str) -> None:
         json_files = get_json_files(product)
 
         for json_file in json_files:
-            _, major_version = get_version_from_filename(json_file)
+            version, major_version = get_version_from_filename(json_file)
             if major_version not in versions:
                 continue
             with open(os.path.join(stats_path, json_file)) as f:
@@ -104,7 +104,7 @@ async def async_main(version: str) -> None:
                         }
                     if product not in completion_data[locale]:
                         completion_data[locale][product] = {}
-                    completion_data[locale][product][major_version] = percentage
+                    completion_data[locale][product][version] = percentage
 
     output_file = os.path.abspath(
         os.path.join(os.path.dirname(__file__), os.pardir, "docs", "data", "data.json")
