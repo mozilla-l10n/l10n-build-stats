@@ -437,7 +437,7 @@ async function init() {
         showSkeleton(true);
         setStatus('Loading data…');
 
-        const res = await fetch('data/data.json');
+        const res = await fetch('data/data.json', { cache: 'no-cache' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         db = await res.json();
 
