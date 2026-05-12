@@ -1,8 +1,8 @@
-name: Extract latest Firefox data
+name: Extract Firefox data
 
 on:
   schedule:
-    - cron: '30 15 * * 2'
+    - cron: '5 14 * * 2'
   workflow_dispatch:
     inputs:
       version:
