@@ -9,9 +9,15 @@ on:
         description: 'Version to extract (e.g. 150.0 or 150.0.2). Leave empty to use the latest released version.'
         required: false
         default: ''
+      force:
+        description: 'Force re-run even if there is already a successful run today.'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   extract:
@@ -21,6 +27,36 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: true
+      - name: Check for prior successful run today
+        id: daily
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE: ${{ inputs.force }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          RUN_ID: ${{ github.run_id }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [ "$FORCE" = "true" ]; then
+            echo "Force flag set; bypassing same-day run check"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          today=$(date -u +%Y-%m-%d)
+          count=$(gh run list \
+            --repo "$REPO" \
+            --workflow "$WORKFLOW_NAME" \
+            --status success \
+            --created ">=$today" \
+            --json databaseId \
+            --jq "[.[] | select(.databaseId != $RUN_ID)] | length")
+          if [ "$count" -gt 0 ]; then
+            echo "Found $count prior successful run(s) today; skipping"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No prior successful run today"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
       - name: Resolve version to extract
         id: latest
         env:
@@ -45,6 +81,11 @@ jobs:
         id: check
         run: |
           set -euo pipefail
+          if [ "${{ steps.daily.outputs.skip }}" = "true" ]; then
+            echo "Skipping extraction: a successful run already happened today"
+            echo "needs_extract=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           version="${{ steps.latest.outputs.version }}"
           # Stats filenames replace dots with underscores (e.g. 150.0.2 -> 150_0_2)
           suffix="${version//./_}"
