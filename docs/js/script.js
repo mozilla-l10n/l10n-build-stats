@@ -95,11 +95,53 @@ function versionCompare(a, b) {
     return 0;
 }
 
-// Map a version string to an x-axis position. Major releases land on integers
-// (so "150.0" → 150). Dot releases (e.g. "150.0.1", "150.0.2") are placed at
-// 0.25-unit increments after the major, so the gap between dot releases is
-// 1/4 of the gap between two major releases.
+// Map of version string → x-axis position, populated from the loaded data
+// so dot releases space evenly between their bounding major versions
+// regardless of which dot release numbers actually shipped.
+let versionPositions = new Map();
+
+function isDotRelease(v) {
+    const parts = v.split('.').map(Number);
+    return parts.length > 2 && (parts[2] || 0) > 0;
+}
+
+// Build a global version → x map from the dataset. Major releases land on
+// integers ("150.0" → 150). Dot releases for a given major are sorted and
+// spaced evenly in the open interval (major, major+1), so e.g. dot releases
+// .2, .3, .4, .5 for 151 land at 151.2, 151.4, 151.6, 151.8.
+function buildVersionPositions(db) {
+    const allVersions = new Set();
+    for (const locale of Object.keys(db)) {
+        const entry = db[locale];
+        for (const p of PRODUCTS) {
+            Object.keys(entry[p.id] || {}).forEach(v => allVersions.add(v));
+        }
+    }
+
+    const dotsByMajor = new Map();
+    const positions = new Map();
+    for (const v of allVersions) {
+        const major = Number(v.split('.')[0]) || 0;
+        if (isDotRelease(v)) {
+            if (!dotsByMajor.has(major)) dotsByMajor.set(major, []);
+            dotsByMajor.get(major).push(v);
+        } else {
+            positions.set(v, major);
+        }
+    }
+
+    for (const [major, versions] of dotsByMajor) {
+        versions.sort(versionCompare);
+        const step = 1 / (versions.length + 1);
+        versions.forEach((v, i) => positions.set(v, major + (i + 1) * step));
+    }
+
+    return positions;
+}
+
 function versionToX(v) {
+    if (versionPositions.has(v)) return versionPositions.get(v);
+    // Fallback for versions not in the precomputed map.
     const parts = v.split('.').map(Number);
     const major = parts[0] || 0;
     const dot = parts[2] || 0;
@@ -440,6 +482,8 @@ async function init() {
         const res = await fetch('data/data.json', { cache: 'no-cache' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         db = await res.json();
+
+        versionPositions = buildVersionPositions(db);
 
         // Build locale list from JSON top-level keys
         const allLocalesSet = new Set(Object.keys(db));
