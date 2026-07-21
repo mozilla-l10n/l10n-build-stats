@@ -237,7 +237,7 @@ def render_product_paragraph(
     product: str,
     spreadsheet_key: str,
     previous_major: str,
-    latest_version: str,
+    latest_dot_version: str,
     base_version: str,
     changes: list[LocaleChange],
     gains: list[DotReleaseGain],
@@ -270,13 +270,13 @@ def render_product_paragraph(
     else:
         parts.append("No locale moved by more than ±1.00 percentage points.")
 
-    if gains and base_version != latest_version:
+    if gains and base_version != latest_dot_version:
         items = [
             f"{g['name']} (+{g['delta_pp']:.2f}%, now {fmt_pct(g['latest'])})"
             for g in sorted(gains, key=lambda g: -g["delta_pp"])
         ]
         parts.append(
-            f"Dot-release improvements ({base_version} → {latest_version}): "
+            f"Dot-release improvements ({base_version} → {latest_dot_version}): "
             + ", ".join(items)
             + "."
         )
@@ -301,8 +301,12 @@ def main() -> None:
         if not versions:
             sys.exit(f"No version data for product '{product}' in {DATA_FILE}.")
         prev_major, cur_major = find_two_latest_majors(versions)
-        previous_version = latest_dot_release(versions, prev_major)
-        latest_version = latest_dot_release(versions, cur_major)
+        # Compare the major base releases (e.g. 152.0 -> 153.0), not the latest
+        # dot release of each major. The dot-release section below still tracks
+        # improvements within the current major (base -> latest dot).
+        previous_version = f"{prev_major}.0"
+        latest_version = f"{cur_major}.0"
+        latest_dot = latest_dot_release(versions, cur_major)
         base_version = f"{cur_major}.0"
         latest_major = cur_major
 
@@ -310,14 +314,14 @@ def main() -> None:
             data, product, previous_version, latest_version, top_locales[product]
         )
         gains = build_dot_release_gains(
-            data, product, base_version, latest_version, top_locales[product]
+            data, product, base_version, latest_dot, top_locales[product]
         )
         paragraphs.append(
             render_product_paragraph(
                 product,
                 spreadsheet_key,
                 prev_major,
-                latest_version,
+                latest_dot,
                 base_version,
                 changes,
                 gains,
